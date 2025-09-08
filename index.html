@@ -1,4 +1,106 @@
-function countWords() {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All-in-One Tools</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+    header { background: #222; color: #fff; padding: 20px; text-align: center; }
+    nav { background: #333; display: flex; flex-wrap: wrap; }
+    nav button { flex: 1; padding: 10px; border: none; background: #333; color: white; cursor: pointer; }
+    nav button:hover { background: #444; }
+    section { display: none; padding: 20px; }
+    section.active { display: block; }
+    input, button, textarea { margin: 5px 0; padding: 8px; }
+    .result { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>All-in-One Tools Website</h1>
+    <p>Pick a tool below and use it instantly!</p>
+  </header>
+
+  <nav>
+    <button onclick="showTool('age')">Age Calculator</button>
+    <button onclick="showTool('bmi')">BMI Calculator</button>
+    <button onclick="showTool('percentage')">Percentage Calculator</button>
+    <button onclick="showTool('wordcounter')">Word Counter</button>
+    <button onclick="showTool('countdown')">Countdown Timer</button>
+  </nav>
+
+  <!-- Age Calculator -->
+  <section id="age">
+    <h2>Age Calculator</h2>
+    <input type="date" id="dob">
+    <button onclick="calculateAge()">Calculate Age</button>
+    <div class="result" id="ageResult"></div>
+  </section>
+
+  <!-- BMI Calculator -->
+  <section id="bmi">
+    <h2>BMI Calculator</h2>
+    <input type="number" id="weight" placeholder="Weight (kg)">
+    <input type="number" id="height" placeholder="Height (cm)">
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <div class="result" id="bmiResult"></div>
+  </section>
+
+  <!-- Percentage Calculator -->
+  <section id="percentage">
+    <h2>Percentage Calculator</h2>
+    <input type="number" id="part" placeholder="Part">
+    <input type="number" id="whole" placeholder="Whole">
+    <button onclick="calculatePercentage()">Calculate</button>
+    <div class="result" id="percentageResult"></div>
+  </section>
+
+  <!-- Word Counter -->
+  <section id="wordcounter">
+    <h2>Word Counter</h2>
+    <textarea id="textInput" rows="5" cols="40" placeholder="Type or paste text here..."></textarea><br>
+    <button onclick="countWords()">Count Words</button>
+    <div class="result" id="wordResult"></div>
+  </section>
+
+  <!-- Countdown Timer -->
+  <section id="countdown">
+    <h2>Countdown Timer</h2>
+    <input type="date" id="countdownDate">
+    <button onclick="startCountdown()">Start Countdown</button>
+    <div class="result" id="countdownResult"></div>
+  </section>
+
+  <script>
+    function showTool(toolId) {
+      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(toolId).classList.add('active');
+    }
+
+    function calculateAge() {
+      const dob = new Date(document.getElementById('dob').value);
+      if (!dob || isNaN(dob)) return;
+      const diff = Date.now() - dob.getTime();
+      const age = new Date(diff).getUTCFullYear() - 1970;
+      document.getElementById('ageResult').innerText = You are ${age} years old.;
+    }
+
+    function calculateBMI() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value) / 100;
+      if (!weight || !height) return;
+      const bmi = (weight / (height * height)).toFixed(2);
+      document.getElementById('bmiResult').innerText = Your BMI is ${bmi};
+    }
+
+    function calculatePercentage() {
+      const part = parseFloat(document.getElementById('part').value);
+      const whole = parseFloat(document.getElementById('whole').value);
+      if (!part || !whole) return;
+      const percent = ((part / whole) * 100).toFixed(2);
+      document.getElementById('percentageResult').innerText = ${percent}%;
+    }function countWords() {
       const text = document.getElementById('textInput').value.trim();
       const words = text ? text.split(/\s+/).length : 0;
       document.getElementById('wordResult').innerText = Word count: ${words};
