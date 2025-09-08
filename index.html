@@ -1,0 +1,26 @@
+function countWords() {
+      const text = document.getElementById('textInput').value.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      document.getElementById('wordResult').innerText = Word count: ${words};
+    }
+
+    function startCountdown() {
+      const targetDate = new Date(document.getElementById('countdownDate').value);
+      if (!targetDate) return;
+      const interval = setInterval(() => {
+        const now = new Date();
+        const diff = targetDate - now;
+        if (diff <= 0) {
+          document.getElementById('countdownResult').innerText = "Countdown finished!";
+          clearInterval(interval);
+        } else {
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+          const minutes = Math.floor((diff / (1000 * 60)) % 60);
+          const seconds = Math.floor((diff / 1000) % 60);
+          document.getElementById('countdownResult').innerText = ${days}d ${hours}h ${minutes}m ${seconds}s left;
+        }
+      }, 1000);
+    }
+  </script></body>
+</html>
