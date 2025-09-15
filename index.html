@@ -2,433 +2,552 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <title>Loan & Comparison — Single Page</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Loan & Mortgage Pro</title>
 
-  <!-- Chart.js CDN -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- jsPDF + autotable -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.25/dist/jspdf.plugin.autotable.min.js"></script>
 
   <style>
     :root{
-      --bg:#f4f6fa;
-      --card:#fff;
-      --text:#0f1720;
-      --muted:#556;
-      --accent:#0b74ff;
-      --accent-2:#10b981;
-      --danger:#ef4444;
+      --bg:#f4f7fb; --card:#ffffff; --text:#0f1720; --muted:#556; --accent:#0b74ff; --accent2:#10b981;
       --radius:12px;
     }
     [data-theme="dark"]{
-      --bg:#0b1220;
-      --card:#0f1726;
-      --text:#e6eef8;
-      --muted:#9fb0c8;
-      --accent:#5aa8ff;
-      --accent-2:#34d399;
-      --danger:#fb7185;
+      --bg:#0b1220; --card:#0f1726; --text:#e6eef8; --muted:#9fb0c8; --accent:#5aa8ff; --accent2:#34d399;
     }
-
     *{box-sizing:border-box;font-family:Inter,Segoe UI,system-ui,Arial,sans-serif}
-    body{margin:0;background:var(--bg);color:var(--text); -webkit-font-smoothing:antialiased; padding:28px; display:flex; align-items:flex-start; justify-content:center; min-height:100vh;}
-    .wrap{width:100%;max-width:1100px;}
-    header{display:flex;align-items:center;justify-content:space-between; margin-bottom:18px;}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{
-      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(11,116,255,0.12);
-    }
-    h1{margin:0;font-size:1.25rem}
-    p.lead{margin:0;color:var(--muted);font-size:0.95rem}
+    body{margin:0;background:var(--bg);color:var(--text);padding:24px;display:flex;justify-content:center;min-height:100vh;}
+    .container{width:100%;max-width:1150px;}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    h1{margin:0;font-size:1.15rem}
+    p.lead{margin:0;color:var(--muted);font-size:0.92rem}
 
-    .controls{display:grid;grid-template-columns:1fr 420px; gap:18px; align-items:start;}
-    @media (max-width:880px){ .controls{grid-template-columns:1fr; } }
+    /* Tabs */
+    .tabs{display:flex;gap:8px;margin:18px 0}
+    .tab-btn{padding:8px 14px;border-radius:999px;background:transparent;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+    .tab-btn.active{background:var(--card);box-shadow:0 6px 18px rgba(2,6,23,0.06);}
 
-    .card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.06);}
+    /* Layout */
+    .main{display:flex;gap:18px;}
+    @media (max-width:980px){ .main{flex-direction:column;} }
 
-    /* Left panel (calculator & schedule) */
-    .calc{display:grid;gap:12px}
+    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 8px 30px rgba(2,6,23,0.06);}
+
+    .left{flex:1}
+    .right{width:460px}
+    @media (max-width:980px){ .right{width:100%} }
+
     label{display:block;font-size:0.9rem;color:var(--muted);margin-bottom:6px}
-    input[type="number"], select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #e6eef8;background:transparent;color:var(--text);font-size:1rem}
+    input[type="number"], select, input[type="date"]{width:100%;padding:10px;border-radius:10px;border:1px solid #e6eef8;background:transparent;color:var(--text);font-size:1rem}
     .row{display:flex;gap:12px}
     .row .col{flex:1}
+    .actions{display:flex;gap:10px;margin-top:10px}
 
-    .actions{display:flex;gap:10px;margin-top:6px}
     button.btn{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer;font-weight:600}
-    button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text)}
-    .small{font-size:0.9rem;padding:8px 10px;border-radius:8px}
+    button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:10px 12px;border-radius:10px;cursor:pointer}
 
-    .summary{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
-    .stat{flex:1;min-width:140px;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.04)}
-    .stat h3{margin:0;font-size:0.95rem;color:var(--muted)}
-    .stat p{margin:8px 0 0;font-size:1.15rem;font-weight:700}
+    .summary{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .stat{flex:1;min-width:140px;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);border:1px solid rgba(0,0,0,0.04)}
+    .stat h4{margin:0;color:var(--muted);font-size:0.85rem}
+    .stat p{margin:6px 0 0;font-weight:700;font-size:1.05rem}
 
-    .table-wrap{margin-top:12px;max-height:360px;overflow:auto;border-radius:10px;border:1px solid rgba(0,0,0,0.06)}
-    table{width:100%;border-collapse:collapse;font-size:0.95rem}
-    th,td{padding:10px;border-bottom:1px solid rgba(0,0,0,0.04);text-align:right}
+    .table-wrap{margin-top:12px;max-height:340px;overflow:auto;border-radius:10px;border:1px solid rgba(0,0,0,0.06)}
+    table{width:100%;border-collapse:collapse;font-size:0.92rem}
+    th,td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.04);text-align:right}
     th{position:sticky;top:0;background:var(--card);text-align:right;color:var(--muted);font-weight:700}
-    td:first-child, th:first-child{text-align:left;padding-left:14px}
+    td:first-child, th:first-child{text-align:left;padding-left:12px}
 
-    .chart-wrap{margin-left:18px}
-    @media (max-width:880px){ .chart-wrap{margin-left:0;margin-top:18px} }
+    .cards-compare{display:flex;gap:12px}
+    @media (max-width:880px){ .cards-compare{flex-direction:column} }
 
-    footer{margin-top:16px;color:var(--muted);font-size:0.9rem;text-align:center}
+    .card-compact{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);border:1px solid rgba(0,0,0,0.04)}
 
-    /* theme toggle */
-    .top-actions{display:flex;align-items:center;gap:10px}
-    .toggle{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:transparent;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
-    .badge{font-weight:700;padding:4px 8px;border-radius:8px;background:rgba(0,0,0,0.04);color:var(--muted)}
-    .error{color:var(--danger);font-weight:600}
+    .chart-container{margin-top:12px}
+
+    footer{margin-top:18px;color:var(--muted);text-align:center;font-size:0.9rem}
+
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .toggle{padding:8px;border-radius:999px;background:transparent;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+    .error{color:#ef4444;font-weight:700}
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="container">
     <header>
       <div class="brand">
         <div class="logo">LM</div>
         <div>
           <h1>Loan & Mortgage Pro</h1>
-          <p class="lead">Fast mortgage & loan calculator · amortization schedule · export CSV</p>
+          <p class="lead">Calculator & Loan Comparison (PDF export)</p>
         </div>
       </div>
-
       <div class="top-actions">
-        <div class="badge" id="modeLabel">Light</div>
         <button class="toggle" id="themeToggle">Toggle Theme</button>
       </div>
     </header>
 
-    <div class="controls">
-      <!-- LEFT: Calculator & Schedule -->
-      <div class="card">
-        <div class="calc">
-          <!-- Inputs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="calculator">Calculator</button>
+      <button class="tab-btn" data-tab="comparison">Comparison</button>
+    </div>
+
+    <div class="main">
+      <!-- LEFT column (main content region) -->
+      <div class="left">
+        <!-- Calculator Tab -->
+        <div class="card" id="calculatorTab">
+          <h3 style="margin-top:0">Loan / Mortgage Calculator</h3>
+
           <div>
-            <div style="display:flex;justify-content:space-between;align-items:end">
-              <div>
-                <label>Loan / Mortgage Type</label>
-                <select id="loanType" style="width:220px">
-                  <option value="loan">Standard Loan</option>
-                  <option value="mortgage">Mortgage</option>
+            <div style="display:flex;gap:12px;align-items:end">
+              <div style="flex:1">
+                <label>Principal</label>
+                <input id="c_principal" type="number" min="0" step="0.01" value="250000" />
+              </div>
+              <div style="width:160px">
+                <label>Currency</label>
+                <select id="c_currency">
+                  <option value="$">$ USD</option>
+                  <option value="€">€ EUR</option>
+                  <option value="£">£ GBP</option>
                 </select>
               </div>
-              <div>
-                <label>Payment Frequency</label>
-                <select id="freq" style="width:160px">
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div class="col">
+                <label>Annual interest rate (%)</label>
+                <input id="c_rate" type="number" min="0" step="0.01" value="4.5" />
+              </div>
+              <div class="col">
+                <label>Term (years)</label>
+                <input id="c_years" type="number" min="0" step="1" value="30" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div class="col">
+                <label>Extra payment per period (optional)</label>
+                <input id="c_extra" type="number" min="0" step="0.01" value="0" />
+              </div>
+              <div style="width:160px">
+                <label>Frequency</label>
+                <select id="c_freq">
                   <option value="12">Monthly</option>
                   <option value="26">Bi-weekly</option>
                   <option value="52">Weekly</option>
                 </select>
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="col">
-              <label>Principal (loan amount)</label>
-              <input id="principal" type="number" placeholder="e.g. 250000" min="0" step="0.01" />
+            <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+              <label style="margin:0">Start date</label>
+              <input id="c_start" type="date" style="width:170px" />
             </div>
-            <div style="width:150px">
-              <label>Currency</label>
-              <select id="currency">
-                <option value="$">$ USD</option>
-                <option value="€">€ EUR</option>
-                <option value="£">£ GBP</option>
-                <option value="₦">₦ NGN</option>
-              </select>
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="col">
-              <label>Annual interest rate (%)</label>
-              <input id="rate" type="number" placeholder="e.g. 4.5" min="0" step="0.01" />
+            <div class="actions">
+              <button class="btn" id="computeCalc">Compute</button>
+              <button class="ghost" id="exportPdfCalc">Export Schedule (PDF)</button>
+              <button class="ghost" id="resetCalc">Reset</button>
             </div>
-            <div class="col">
-              <label>Term (years)</label>
-              <input id="years" type="number" placeholder="e.g. 30" min="0" step="1" />
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="col">
-              <label>Extra payment per period (optional)</label>
-              <input id="extra" type="number" placeholder="e.g. 100" min="0" step="0.01" />
-            </div>
-            <div style="width:170px">
-              <label>Start date</label>
-              <input id="startDate" type="date" />
-            </div>
-          </div>
+            <div id="c_error" style="margin-top:8px"></div>
 
-          <div class="actions">
-            <button class="btn" id="computeBtn">Compute</button>
-            <button class="ghost small" id="resetBtn">Reset</button>
-            <button class="ghost small" id="exportBtn">Export CSV</button>
-          </div>
+            <div class="summary" id="c_summary" style="margin-top:12px">
+              <div class="stat"><h4>Payment</h4><p id="c_payment">—</p></div>
+              <div class="stat"><h4>Total Paid</h4><p id="c_totalPaid">—</p></div>
+              <div class="stat"><h4>Total Interest</h4><p id="c_totalInterest">—</p></div>
+              <div class="stat"><h4>Payoff</h4><p id="c_payoff">—</p></div>
+            </div>
 
-          <div id="errorMsg" style="margin-top:10px"></div>
+            <div class="table-wrap" id="c_tableWrap" style="display:none">
+              <table id="c_table">
+                <thead>
+                  <tr><th>#</th><th>Date</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Extra</th><th>Balance</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
 
-          <!-- Summary -->
-          <div class="summary" style="margin-top:12px">
-            <div class="stat">
-              <h3>Payment</h3>
-              <p id="paymentVal">—</p>
-            </div>
-            <div class="stat">
-              <h3>Total Paid</h3>
-              <p id="totalPaid">—</p>
-            </div>
-            <div class="stat">
-              <h3>Total Interest</h3>
-              <p id="totalInterest">—</p>
-            </div>
-            <div class="stat">
-              <h3>Payoff Time</h3>
-              <p id="payoffTime">—</p>
-            </div>
-          </div>
-
-          <!-- Amortization table -->
-          <div class="table-wrap" id="tableWrap" style="display:none;margin-top:12px">
-            <table id="amTable">
-              <thead>
-                <tr><th>Payment #</th><th>Payment Date</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Extra</th><th>Balance</th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
           </div>
         </div>
+
+        <!-- Comparison Tab -->
+        <div class="card" id="comparisonTab" style="display:none; margin-top:16px;">
+          <h3 style="margin-top:0">Loan Comparison (Loan Balance Over Time)</h3>
+
+          <div class="cards-compare">
+            <div class="card-compact">
+              <h4 style="margin-top:0">Loan A</h4>
+              <label>Principal</label>
+              <input id="a_principal" type="number" min="0" step="0.01" value="250000" />
+              <label style="margin-top:8px">Annual interest rate (%)</label>
+              <input id="a_rate" type="number" min="0" step="0.01" value="4.5" />
+              <div class="row" style="margin-top:8px">
+                <div class="col">
+                  <label>Term (years)</label>
+                  <input id="a_years" type="number" min="0" step="1" value="30" />
+                </div>
+                <div style="width:120px">
+                  <label>Freq</label>
+                  <select id="a_freq"><option value="12">Monthly</option><option value="26">Bi-weekly</option><option value="52">Weekly</option></select>
+                </div>
+              </div>
+              <label style="margin-top:8px">Extra per period</label>
+              <input id="a_extra" type="number" min="0" step="0.01" value="0" />
+              <label style="margin-top:8px">Start date</label>
+              <input id="a_start" type="date" />
+            </div>
+
+            <div class="card-compact">
+              <h4 style="margin-top:0">Loan B</h4>
+              <label>Principal</label>
+              <input id="b_principal" type="number" min="0" step="0.01" value="250000" />
+              <label style="margin-top:8px">Annual interest rate (%)</label>
+              <input id="b_rate" type="number" min="0" step="0.01" value="5.25" />
+              <div class="row" style="margin-top:8px">
+                <div class="col">
+                  <label>Term (years)</label>
+                  <input id="b_years" type="number" min="0" step="1" value="30" />
+                </div>
+                <div style="width:120px">
+                  <label>Freq</label>
+                  <select id="b_freq"><option value="12">Monthly</option><option value="26">Bi-weekly</option><option value="52">Weekly</option></select>
+                </div>
+              </div>
+              <label style="margin-top:8px">Extra per period</label>
+              <input id="b_extra" type="number" min="0" step="0.01" value="0" />
+              <label style="margin-top:8px">Start date</label>
+              <input id="b_start" type="date" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+            <button class="btn" id="compareBtn">Compare</button>
+            <button class="ghost" id="exportComparePdf">Export Comparison (PDF)</button>
+            <button class="ghost" id="resetCompare">Reset</button>
+          </div>
+
+          <div id="compare_error" style="margin-top:8px"></div>
+
+          <div style="margin-top:12px;display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div style="flex:1;min-width:280px">
+              <div class="card-compact">
+                <h4 style="margin-top:0">Summary</h4>
+                <table style="width:100%;font-size:0.95rem">
+                  <tr><td>Metric</td><td style="text-align:right">Loan A</td><td style="text-align:right">Loan B</td></tr>
+                  <tr><td style="font-weight:700">Monthly Payment</td><td id="cmp_a_payment" style="text-align:right">—</td><td id="cmp_b_payment" style="text-align:right">—</td></tr>
+                  <tr><td style="font-weight:700">Total Paid</td><td id="cmp_a_total" style="text-align:right">—</td><td id="cmp_b_total" style="text-align:right">—</td></tr>
+                  <tr><td style="font-weight:700">Total Interest</td><td id="cmp_a_interest" style="text-align:right">—</td><td id="cmp_b_interest" style="text-align:right">—</td></tr>
+                  <tr><td style="font-weight:700">Payoff</td><td id="cmp_a_payoff" style="text-align:right">—</td><td id="cmp_b_payoff" style="text-align:right">—</td></tr>
+                </table>
+              </div>
+            </div>
+
+            <div style="flex:1;min-width:320px">
+              <div class="card-compact">
+                <h4 style="margin-top:0">Balance Over Time</h4>
+                <div class="chart-container">
+                  <canvas id="compareChart" style="max-height:320px"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
-      <!-- RIGHT: Chart -->
-      <div class="chart-wrap">
-        <div class="card" style="width:100%;max-width:520px">
-          <h3 style="margin-top:0;margin-bottom:8px">Balance over time</h3>
-          <canvas id="balanceChart" style="max-height:420px"></canvas>
+      <!-- RIGHT column: chart (calculator) -->
+      <div class="right">
+        <div class="card">
+          <h4 style="margin-top:0">Balance Over Time (Calculator)</h4>
+          <canvas id="calcChart" style="max-height:420px"></canvas>
         </div>
       </div>
     </div>
 
-    <footer>
-      Made with ♥ — Loan & Mortgage Pro. Exported CSV is comma-separated and opens in Excel/Sheets.
-    </footer>
+    <footer>Loan & Mortgage Pro — single-page tool. Exported PDFs open in browser or download.</footer>
   </div>
 
 <script>
-(function(){
-  // Helpers
+(() => {
+  // Utility
   const $ = id => document.getElementById(id);
-  const fmt = n => (Number.isFinite(n) ? n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—');
-  const currencySym = () => $('currency').value || '$';
-  const setError = (m='') => $('errorMsg').innerHTML = m ? `<div class="error">${m}</div>` : '';
+  const toFixed = n => Number.isFinite(n) ? Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+  const nowIso = () => new Date().toISOString().slice(0,10);
 
-  // Default sample values
-  $('principal').value = 250000;
-  $('rate').value = 4.5;
-  $('years').value = 30;
-  $('extra').value = 0;
-  $('startDate').value = new Date().toISOString().slice(0,10);
-
-  // theme toggle
+  // Theme
   const themeToggle = $('themeToggle');
-  const modeLabel = $('modeLabel');
-  const applyTheme = (t) => {
-    if(t==='dark'){ document.documentElement.setAttribute('data-theme','dark'); modeLabel.textContent='Dark'; }
-    else { document.documentElement.removeAttribute('data-theme'); modeLabel.textContent='Light'; }
-    localStorage.setItem('lm_theme', t);
-  };
   const saved = localStorage.getItem('lm_theme') || 'light';
-  applyTheme(saved);
-  themeToggle.addEventListener('click', ()=> applyTheme((localStorage.getItem('lm_theme')==='dark') ? 'light' : 'dark'));
-
-  // Chart setup
-  const ctx = document.getElementById('balanceChart').getContext('2d');
-  let chart = new Chart(ctx, {
-    type: 'line',
-    data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#0b74ff', fill:false, tension:0.2 }] },
-    options: { responsive:true, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{ display:false } } }
+  if(saved === 'dark') document.documentElement.setAttribute('data-theme','dark');
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.hasAttribute('data-theme');
+    if(isDark){ document.documentElement.removeAttribute('data-theme'); localStorage.setItem('lm_theme','light'); }
+    else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('lm_theme','dark'); }
   });
 
-  // Compute functions
-  function calculateSchedule({principal, annualRate, years, freq, extra, startDate}) {
-    // Validate
-    if(!(principal>0)) throw new Error('Principal must be greater than 0');
-    if(!(annualRate>=0)) throw new Error('Interest rate is required');
+  // Tabs
+  const tabBtns = Array.from(document.querySelectorAll('.tab-btn'));
+  const calculatorTab = $('calculatorTab'), comparisonTab = $('comparisonTab');
+  tabBtns.forEach(btn => btn.addEventListener('click', e => {
+    tabBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    if(tab === 'calculator'){ calculatorTab.style.display='block'; comparisonTab.style.display='none'; }
+    else { calculatorTab.style.display='none'; comparisonTab.style.display='block'; }
+  }));
+
+  // Charts
+  const calcCtx = $('calcChart').getContext('2d');
+  const compareCtx = $('compareChart').getContext('2d');
+  let calcChart = new Chart(calcCtx, { type:'line', data:{labels:[], datasets:[{label:'Balance',data:[],borderColor:'#0b74ff',fill:false}] }, options:{responsive:true,scales:{y:{beginAtZero:true}}} });
+  let compareChart = new Chart(compareCtx, { type:'line', data:{labels:[], datasets:[
+    {label:'Loan A', data:[], borderColor:'#0b74ff', fill:false, tension:0.2},
+    {label:'Loan B', data:[], borderColor:'#10b981', fill:false, tension:0.2}
+  ] }, options:{responsive:true,scales:{y:{beginAtZero:true}}} });
+
+  // Amortization helper
+  function buildSchedule({principal, annualRate, years, freq, extra, startDate}) {
+    principal = Number(principal); annualRate = Number(annualRate); years = Number(years); freq = Number(freq); extra = Number(extra)||0;
+    if(!(principal>0)) throw new Error('Principal must be > 0');
+    if(!(annualRate>=0)) throw new Error('Annual rate required');
     if(!(years>0)) throw new Error('Term (years) must be > 0');
-    if(!(freq>0)) throw new Error('Invalid payment frequency');
-
     const periods = Math.round(years * freq);
-    const periodRate = (annualRate/100) / freq;
-    // Standard annuity payment formula
-    let payment;
-    if(periodRate === 0){
-      payment = principal / periods;
-    } else {
-      payment = principal * (periodRate / (1 - Math.pow(1 + periodRate, -periods)));
-    }
+    const r = (annualRate/100) / freq;
+    let payment = r === 0 ? principal / periods : principal * (r / (1 - Math.pow(1+r, -periods)));
     payment = Number(payment);
-
-    // Build schedule
     let balance = principal;
     let schedule = [];
-    let paymentDate = new Date(startDate);
-    const addDays = (freq === 12) ? (30) : (freq === 26 ? 14 : 7); // approx for label
-    let totalPaid = 0, totalInterest = 0;
+    let d = new Date(startDate || nowIso());
+    const stepDays = freq === 12 ? 30 : (freq === 26 ? 14 : 7);
 
-    for(let i=1; i<=10000; i++){
-      if(balance <= 0.0001) break;
-      // interest for this period
-      const interest = balance * periodRate;
+    let i=1; let totalPaid=0; let totalInterest=0;
+    while(balance > 0.0005 && i<=periods+2000) {
+      const interest = balance * r;
       let principalPaid = payment - interest;
-      let extraPaid = Number(extra) || 0;
-
-      // handle last payment if payment exceeds balance
-      if(principalPaid + extraPaid > balance){
+      let extraPaid = extra;
+      // final payment handling
+      if(principalPaid + extraPaid >= balance){
         principalPaid = balance;
-        extraPaid = 0;
-        // adjust payment to interest + principalPaid
-        const finalPayment = interest + principalPaid;
+        const finalPayment = principalPaid + interest;
         totalPaid += finalPayment;
         totalInterest += interest;
+        schedule.push({n:i, date: new Date(d), payment: finalPayment, principal: principalPaid, interest, extra:0, balance:0});
         balance = 0;
-        schedule.push({
-          n: i,
-          date: new Date(paymentDate),
-          payment: finalPayment,
-          principal: principalPaid,
-          interest,
-          extra: 0,
-          balance: 0
-        });
         break;
       } else {
         balance = balance - principalPaid - extraPaid;
         totalPaid += (payment + extraPaid);
         totalInterest += interest;
-        schedule.push({
-          n: i,
-          date: new Date(paymentDate),
-          payment: payment,
-          principal: principalPaid,
-          interest,
-          extra: extraPaid,
-          balance: Math.max(0, balance)
-        });
+        schedule.push({n:i, date: new Date(d), payment, principal: principalPaid, interest, extra: extraPaid, balance: Math.max(0,balance)});
       }
-
-      // next payment date (advance)
-      paymentDate.setDate(paymentDate.getDate() + addDays);
-      // safety: if schedule grows too big, break
-      if(schedule.length > periods + 5) {
-        // prevents infinite loop on bad input
-        if(schedule.length > 10000) break;
-      }
+      // advance date
+      d.setDate(d.getDate() + stepDays);
+      i++;
+      if(i>20000) break; // safety
     }
-
-    return {
-      payment,
-      schedule,
-      totalPaid,
-      totalInterest
-    };
+    return { payment, schedule, totalPaid, totalInterest };
   }
 
-  // Render schedule table
-  function renderSchedule(schedule){
-    const tbody = document.querySelector('#amTable tbody');
+  // render calculator schedule
+  function renderCalc({payment, schedule, totalPaid, totalInterest}, symbol) {
+    $('c_payment').textContent = `${symbol} ${toFixed(payment)}`;
+    $('c_totalPaid').textContent = `${symbol} ${toFixed(totalPaid)}`;
+    $('c_totalInterest').textContent = `${symbol} ${toFixed(totalInterest)}`;
+    $('c_payoff').textContent = schedule.length ? `${schedule.length} payments · last: ${schedule[schedule.length-1].date.toISOString().slice(0,10)}` : '—';
+    const tbody = $('c_table').querySelector('tbody');
     tbody.innerHTML = '';
     schedule.forEach(row=>{
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.n}</td>
-                      <td>${row.date.toISOString().slice(0,10)}</td>
-                      <td>${currencySym()} ${fmt(row.payment)}</td>
-                      <td>${currencySym()} ${fmt(row.principal)}</td>
-                      <td>${currencySym()} ${fmt(row.interest)}</td>
-                      <td>${currencySym()} ${fmt(row.extra)}</td>
-                      <td>${currencySym()} ${fmt(row.balance)}</td>`;
+      tr.innerHTML = `<td>${row.n}</td><td>${row.date.toISOString().slice(0,10)}</td>
+        <td style="text-align:right">${symbol} ${toFixed(row.payment)}</td>
+        <td style="text-align:right">${symbol} ${toFixed(row.principal)}</td>
+        <td style="text-align:right">${symbol} ${toFixed(row.interest)}</td>
+        <td style="text-align:right">${symbol} ${toFixed(row.extra)}</td>
+        <td style="text-align:right">${symbol} ${toFixed(row.balance)}</td>`;
       tbody.appendChild(tr);
     });
-    $('tableWrap').style.display = schedule.length ? 'block' : 'none';
+    $('c_tableWrap').style.display = schedule.length ? 'block' : 'none';
+
+    // update calc chart
+    const labels = schedule.map(r=>r.date.toISOString().slice(0,10));
+    const data = schedule.map(r=>Number(r.balance.toFixed(2)));
+    calcChart.data.labels = labels;
+    calcChart.data.datasets[0].data = data;
+    calcChart.update();
   }
 
-  // Update chart
-  function updateChart(schedule){
-    const labels = schedule.map(r => r.date.toISOString().slice(0,10));
-    const data = schedule.map(r => Number(r.balance.toFixed(2)));
-    chart.data.labels = labels;
-    chart.data.datasets[0].data = data;
-    chart.update();
-  }
-
-  // derive payoff time
-  function payoffString(schedule, freq){
-    if(!schedule.length) return '—';
-    const last = schedule[schedule.length-1];
-    const d = last.date;
-    const years = Math.floor((d - new Date())/(365*24*60*60*1000));
-    return `${schedule.length} payments · last: ${d.toISOString().slice(0,10)}`;
-  }
-
-  // Compute handler
-  $('computeBtn').addEventListener('click', ()=>{
-    setError('');
-    try{
-      const principal = Number($('principal').value);
-      const rate = Number($('rate').value);
-      const years = Number($('years').value);
-      const freq = Number($('freq').value);
-      const extra = Number($('extra').value) || 0;
-      const startDate = $('startDate').value || new Date().toISOString().slice(0,10);
-
-      const res = calculateSchedule({principal, annualRate:rate, years, freq, extra, startDate});
-      $('paymentVal').textContent = `${currencySym()} ${fmt(res.payment)}`;
-      $('totalPaid').textContent = `${currencySym()} ${fmt(res.totalPaid)}`;
-      $('totalInterest').textContent = `${currencySym()} ${fmt(res.totalInterest)}`;
-      $('payoffTime').textContent = payoffString(res.schedule, freq);
-
-      renderSchedule(res.schedule);
-      updateChart(res.schedule);
-    }catch(err){
-      setError(err.message || 'Invalid input');
+  // Compute calculator action
+  $('computeCalc').addEventListener('click', () => {
+    $('c_error').textContent = '';
+    try {
+      const obj = {
+        principal: $('c_principal').value,
+        annualRate: $('c_rate').value,
+        years: $('c_years').value,
+        freq: $('c_freq').value,
+        extra: $('c_extra').value,
+        startDate: $('c_start').value || nowIso()
+      };
+      const res = buildSchedule(obj);
+      renderCalc(res, $('c_currency').value || '$');
+    } catch (e) {
+      $('c_error').innerHTML = `<div class="error">${e.message}</div>`;
     }
   });
 
-  // Reset handler
-  $('resetBtn').addEventListener('click', ()=>{
-    $('principal').value = '';
-    $('rate').value = '';
-    $('years').value = '';
-    $('extra').value = '';
-    setError('');
-    $('tableWrap').style.display = 'none';
-    $('paymentVal').textContent = '—';
-    $('totalPaid').textContent = '—';
-    $('totalInterest').textContent = '—';
-    $('payoffTime').textContent = '—';
-    chart.data.labels = []; chart.data.datasets[0].data = []; chart.update();
+  // Reset calculator
+  $('resetCalc').addEventListener('click', () => {
+    $('c_principal').value=''; $('c_rate').value=''; $('c_years').value=''; $('c_extra').value=''; $('c_tableWrap').style.display='none';
+    $('c_payment').textContent='—'; $('c_totalPaid').textContent='—'; $('c_totalInterest').textContent='—'; $('c_payoff').textContent='—';
+    calcChart.data.labels=[]; calcChart.data.datasets[0].data=[]; calcChart.update();
+    $('c_error').textContent='';
   });
 
-  // Export CSV
-  $('exportBtn').addEventListener('click', ()=>{
-    const tbody = document.querySelectorAll('#amTable tbody tr');
-    if(!tbody.length){ setError('No schedule to export. Compute first.'); return; }
-    const rows = [];
-    rows.push(['Payment #','Date','Payment','Principal','Interest','Extra','Balance']);
-    tbody.forEach(tr=>{
-      const cols = Array.from(tr.querySelectorAll('td')).map(td=>td.textContent.replace(/,/g,''));
-      rows.push(cols);
-    });
-    const csv = rows.map(r => r.map(v => `"${v.replace(/"/g,'""')}"`).join(',')).join('\\n');
-    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'amortization_schedule.csv'; document.body.appendChild(a); a.click();
-    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
+  // Export calculator schedule to PDF
+  $('exportPdfCalc').addEventListener('click', async () => {
+    try {
+      // ensure computed
+      if($('c_table').querySelector('tbody').children.length === 0){ $('c_error').innerHTML = `<div class="error">No schedule to export — compute first.</div>`; return; }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
+      doc.setFontSize(14);
+      doc.text('Amortization Schedule', 40, 40);
+      doc.setFontSize(10);
+      doc.text(`Principal: ${$('c_currency').value} ${$('c_principal').value}`, 40, 60);
+      doc.text(`Rate: ${$('c_rate').value}% · Term: ${$('c_years').value} years`, 40, 74);
+      // build table rows
+      const rows = [];
+      Array.from($('c_table').querySelectorAll('tbody tr')).forEach(tr => {
+        const cols = Array.from(tr.querySelectorAll('td')).map(td => td.textContent);
+        rows.push(cols);
+      });
+      doc.autoTable({
+        head: [['#','Date','Payment','Principal','Interest','Extra','Balance']],
+        body: rows,
+        startY: 90,
+        styles: {fontSize:9}
+      });
+      doc.save('amortization_schedule.pdf');
+    } catch (err) {
+      console.error(err);
+      $('c_error').innerHTML = `<div class="error">PDF export failed.</div>`;
+    }
   });
 
-  // quick compute on load (sample)
-  document.addEventListener('DOMContentLoaded', ()=> $('computeBtn').click());
+  // Comparison logic
+  function computeAndRenderComparison(){
+    $('compare_error').textContent = '';
+    try {
+      const a = {
+        principal: $('a_principal').value,
+        annualRate: $('a_rate').value,
+        years: $('a_years').value,
+        freq: $('a_freq').value,
+        extra: $('a_extra').value,
+        startDate: $('a_start').value || nowIso()
+      };
+      const b = {
+        principal: $('b_principal').value,
+        annualRate: $('b_rate').value,
+        years: $('b_years').value,
+        freq: $('b_freq').value,
+        extra: $('b_extra').value,
+        startDate: $('b_start').value || nowIso()
+      };
+      const ra = buildSchedule(a);
+      const rb = buildSchedule(b);
+      // summary
+      $('cmp_a_payment').textContent = toFixed(ra.payment);
+      $('cmp_b_payment').textContent = toFixed(rb.payment);
+      $('cmp_a_total').textContent = toFixed(ra.totalPaid);
+      $('cmp_b_total').textContent = toFixed(rb.totalPaid);
+      $('cmp_a_interest').textContent = toFixed(ra.totalInterest);
+      $('cmp_b_interest').textContent = toFixed(rb.totalInterest);
+      $('cmp_a_payoff').textContent = ra.schedule.length ? `${ra.schedule.length} payments · last: ${ra.schedule[ra.schedule.length-1].date.toISOString().slice(0,10)}` : '—';
+      $('cmp_b_payoff').textContent = rb.schedule.length ? `${rb.schedule.length} payments · last: ${rb.schedule[rb.schedule.length-1].date.toISOString().slice(0,10)}` : '—';
+      // balance over time alignment: take max length and unify dates by index
+      const maxLen = Math.max(ra.schedule.length, rb.schedule.length);
+      const labels = [];
+      const aData = [], bData = [];
+      for(let i=0;i<maxLen;i++){
+        const da = ra.schedule[i] ? ra.schedule[i].date.toISOString().slice(0,10) : (ra.schedule[ra.schedule.length-1].date.toISOString().slice(0,10));
+        const db = rb.schedule[i] ? rb.schedule[i].date.toISOString().slice(0,10) : (rb.schedule[rb.schedule.length-1].date.toISOString().slice(0,10));
+        // prefer a label if exists else b
+        labels.push(ra.schedule[i] ? da : db);
+        aData.push(ra.schedule[i] ? Number(ra.schedule[i].balance.toFixed(2)) : 0);
+        bData.push(rb.schedule[i] ? Number(rb.schedule[i].balance.toFixed(2)) : 0);
+      }
+      compareChart.data.labels = labels;
+      compareChart.data.datasets[0].data = aData;
+      compareChart.data.datasets[1].data = bData;
+      compareChart.update();
+      // store for export
+      compareState.ra = ra; compareState.rb = rb;
+    } catch (err) {
+      $('compare_error').innerHTML = `<div class="error">${err.message}</div>`;
+    }
+  }
+
+  const compareState = { ra:null, rb:null };
+  $('compareBtn').addEventListener('click', computeAndRenderComparison);
+
+  $('resetCompare').addEventListener('click', ()=> {
+    ['a_principal','a_rate','a_years','a_extra','b_principal','b_rate','b_years','b_extra'].forEach(id=>$(id).value='');
+    ['cmp_a_payment','cmp_b_payment','cmp_a_total','cmp_b_total','cmp_a_interest','cmp_b_interest','cmp_a_payoff','cmp_b_payoff'].forEach(id=>$(id).textContent='—');
+    compareChart.data.labels=[]; compareChart.data.datasets[0].data=[]; compareChart.data.datasets[1].data=[]; compareChart.update();
+    compareState.ra = compareState.rb = null;
+    $('compare_error').textContent='';
+  });
+
+  // Export comparison PDF (include chart image and summary)
+  $('exportComparePdf').addEventListener('click', async () => {
+    try {
+      if(!compareState.ra || !compareState.rb){ $('compare_error').innerHTML = `<div class="error">No comparison result to export — run Compare first.</div>`; return; }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
+      doc.setFontSize(14);
+      doc.text('Loan Comparison — Balance Over Time', 40, 40);
+      doc.setFontSize(10);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, 40, 56);
+
+      // add chart image from canvas
+      const imgData = $('compareChart').toDataURL('image/png', 1.0);
+      doc.addImage(imgData, 'PNG', 40, 70, 700, 260);
+
+      // summary table data
+      const rows = [
+        ['Metric','Loan A','Loan B'],
+        ['Monthly Payment', toFixed(compareState.ra.payment), toFixed(compareState.rb.payment)],
+        ['Total Paid', toFixed(compareState.ra.totalPaid), toFixed(compareState.rb.totalPaid)],
+        ['Total Interest', toFixed(compareState.ra.totalInterest), toFixed(compareState.rb.totalInterest)],
+        ['Payoff', compareState.ra.schedule.length ? `${compareState.ra.schedule.length} payments` : '—', compareState.rb.schedule.length ? `${compareState.rb.schedule.length} payments` : '—']
+      ];
+      doc.autoTable({
+        startY: 350,
+        head: [rows[0]],
+        body: rows.slice(1),
+        styles:{fontSize:10},
+        headStyles:{fillColor:[11,116,255]}
+      });
+      doc.save('loan_comparison.pdf');
+    } catch (err) {
+      console.error(err);
+      $('compare_error').innerHTML = `<div class="error">Export failed.</div>`;
+    }
+  });
+
+  // initial default dates
+  ['c_start','a_start','b_start'].forEach(id => { const el=$(id); if(!el.value) el.value = nowIso(); });
+
+  // initial compute demo
+  $('computeCalc').click();
 
 })();
 </script>
