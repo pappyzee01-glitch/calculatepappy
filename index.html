@@ -3,127 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All-in-One Tools</title>
+  <title>Pappy Currency</title>
+  <link rel="icon" type="image/png" href="logo.png"> <!-- favicon -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
-    header { background: #222; color: #fff; padding: 20px; text-align: center; }
-    nav { background: #333; display: flex; flex-wrap: wrap; }
-    nav button { flex: 1; padding: 10px; border: none; background: #333; color: white; cursor: pointer; }
-    nav button:hover { background: #444; }
-    section { display: none; padding: 20px; }
-    section.active { display: block; }
-    input, button, textarea { margin: 5px 0; padding: 8px; }
-    .result { margin-top: 10px; font-weight: bold; }
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #222;
+      --accent: #0077ff;
+    }
+    [data-theme="dark"] {
+      --bg: #181a1f;
+      --card: #22252b;
+      --text: #f5f5f5;
+      --accent: #4aa3ff;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header img {
+      height: 80px;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 500px;
+      transition: background 0.3s;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    input, select, button {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      flex: 1;
+      outline: none;
+    }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .swap {
+      flex: 0;
+      padding: 10px 15px;
+      font-weight: bold;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .updated {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 5px;
+    }
+    .theme-toggle {
+      margin-top: 15px;
+      cursor: pointer;
+      padding: 6px 12px;
+      background: var(--accent);
+      border-radius: 8px;
+      color: #fff;
+      border: none;
+    }
+    canvas {
+      margin-top: 20px;
+      max-height: 250px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>All-in-One Tools Website</h1>
-    <p>Pick a tool below and use it instantly!</p>
+    <img src="logo.png" alt="Pappy Currency Logo">
+    <h1>Pappy Currency</h1>
+    <p>Convert currencies with live rates & history</p>
   </header>
 
-  <nav>
-    <button onclick="showTool('age')">Age Calculator</button>
-    <button onclick="showTool('bmi')">BMI Calculator</button>
-    <button onclick="showTool('percentage')">Percentage Calculator</button>
-    <button onclick="showTool('wordcounter')">Word Counter</button>
-    <button onclick="showTool('countdown')">Countdown Timer</button>
-  </nav>
-
-  <!-- Age Calculator -->
-  <section id="age">
-    <h2>Age Calculator</h2>
-    <input type="date" id="dob">
-    <button onclick="calculateAge()">Calculate Age</button>
-    <div class="result" id="ageResult"></div>
-  </section>
-
-  <!-- BMI Calculator -->
-  <section id="bmi">
-    <h2>BMI Calculator</h2>
-    <input type="number" id="weight" placeholder="Weight (kg)">
-    <input type="number" id="height" placeholder="Height (cm)">
-    <button onclick="calculateBMI()">Calculate BMI</button>
-    <div class="result" id="bmiResult"></div>
-  </section>
-
-  <!-- Percentage Calculator -->
-  <section id="percentage">
-    <h2>Percentage Calculator</h2>
-    <input type="number" id="part" placeholder="Part">
-    <input type="number" id="whole" placeholder="Whole">
-    <button onclick="calculatePercentage()">Calculate</button>
-    <div class="result" id="percentageResult"></div>
-  </section>
-
-  <!-- Word Counter -->
-  <section id="wordcounter">
-    <h2>Word Counter</h2>
-    <textarea id="textInput" rows="5" cols="40" placeholder="Type or paste text here..."></textarea><br>
-    <button onclick="countWords()">Count Words</button>
-    <div class="result" id="wordResult"></div>
-  </section>
-
-  <!-- Countdown Timer -->
-  <section id="countdown">
-    <h2>Countdown Timer</h2>
-    <input type="date" id="countdownDate">
-    <button onclick="startCountdown()">Start Countdown</button>
-    <div class="result" id="countdownResult"></div>
-  </section>
+  <div class="card">
+    <div class="row">
+      <input type="number" id="amount" value="1" min="0" step="any">
+    </div>
+    <div class="row">
+      <select id="from"></select>
+      <button class="swap">⇄</button>
+      <select id="to"></select>
+    </div>
+    <div class="row">
+      <button id="convert">Convert</button>
+    </div>
+    <div class="result" id="result">Enter amount and convert.</div>
+    <div class="updated" id="updated"></div>
+    <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+    <canvas id="chart"></canvas>
+  </div>
 
   <script>
-    function showTool(toolId) {
-      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(toolId).classList.add('active');
+    const fromEl = document.getElementById("from");
+    const toEl = document.getElementById("to");
+    const amountEl = document.getElementById("amount");
+    const resultEl = document.getElementById("result");
+    const updatedEl = document.getElementById("updated");
+    const chartEl = document.getElementById("chart");
+    let chart;
+
+    // Theme persistence
+    if(localStorage.getItem("theme")==="dark"){
+      document.body.setAttribute("data-theme","dark");
+    }
+    document.getElementById("themeToggle").onclick=()=>{
+      const isDark=document.body.getAttribute("data-theme")==="dark";
+      if(isDark){
+        document.body.removeAttribute("data-theme");
+        localStorage.setItem("theme","light");
+      }else{
+        document.body.setAttribute("data-theme","dark");
+        localStorage.setItem("theme","dark");
+      }
+    };
+
+    async function loadCurrencies() {
+      const res = await fetch("https://api.exchangerate.host/symbols");
+      const data = await res.json();
+      Object.keys(data.symbols).forEach(code=>{
+        let opt1=document.createElement("option");
+        let opt2=document.createElement("option");
+        opt1.value=opt2.value=code;
+        opt1.textContent=opt2.textContent=`${code} - ${data.symbols[code].description}`;
+        fromEl.appendChild(opt1);
+        toEl.appendChild(opt2);
+      });
+      fromEl.value="USD";
+      toEl.value="EUR";
     }
 
-    function calculateAge() {
-      const dob = new Date(document.getElementById('dob').value);
-      if (!dob || isNaN(dob)) return;
-      const diff = Date.now() - dob.getTime();
-      const age = new Date(diff).getUTCFullYear() - 1970;
-      document.getElementById('ageResult').innerText = You are ${age} years old.;
+    async function convert() {
+      const amount = parseFloat(amountEl.value);
+      if(isNaN(amount)||amount<=0){resultEl.textContent="Enter a valid amount";return;}
+      const from = fromEl.value, to = toEl.value;
+      try {
+        const res = await fetch(`https://api.exchangerate.host/latest?base=${from}&symbols=${to}`);
+        const data = await res.json();
+        const rate = data.rates[to];
+        const converted = (amount*rate).toFixed(2);
+        resultEl.textContent=`${amount} ${from} = ${converted} ${to}`;
+        updatedEl.textContent=`Last updated: ${new Date(data.date).toDateString()}`;
+        drawChart(from,to);
+      }catch(e){
+        resultEl.textContent="Conversion failed.";
+      }
     }
 
-    function calculateBMI() {
-      const weight = parseFloat(document.getElementById('weight').value);
-      const height = parseFloat(document.getElementById('height').value) / 100;
-      if (!weight || !height) return;
-      const bmi = (weight / (height * height)).toFixed(2);
-      document.getElementById('bmiResult').innerText = Your BMI is ${bmi};
+    async function drawChart(from,to){
+      const end = new Date().toISOString().split("T")[0];
+      const start = new Date(Date.now()-6*24*60*60*1000).toISOString().split("T")[0];
+      const res = await fetch(`https://api.exchangerate.host/timeseries?base=${from}&symbols=${to}&start_date=${start}&end_date=${end}`);
+      const data = await res.json();
+      const labels = Object.keys(data.rates).sort();
+      const values = labels.map(d=>data.rates[d][to]);
+      if(chart) chart.destroy();
+      chart=new Chart(chartEl,{
+        type:"line",
+        data:{labels, datasets:[{label:`${from} → ${to}`, data:values, borderColor:"#0077ff", fill:false}]},
+        options:{responsive:true, plugins:{legend:{display:false}}}
+      });
     }
 
-    function calculatePercentage() {
-      const part = parseFloat(document.getElementById('part').value);
-      const whole = parseFloat(document.getElementById('whole').value);
-      if (!part || !whole) return;
-      const percent = ((part / whole) * 100).toFixed(2);
-      document.getElementById('percentageResult').innerText = ${percent}%;
-    }function countWords() {
-      const text = document.getElementById('textInput').value.trim();
-      const words = text ? text.split(/\s+/).length : 0;
-      document.getElementById('wordResult').innerText = Word count: ${words};
-    }
+    document.getElementById("convert").onclick=convert;
+    document.querySelector(".swap").onclick=()=>{
+      [fromEl.value,toEl.value]=[toEl.value,fromEl.value];
+      convert();
+    };
 
-    function startCountdown() {
-      const targetDate = new Date(document.getElementById('countdownDate').value);
-      if (!targetDate || isNaN(targetDate)) return;
-      const interval = setInterval(() => {
-        const now = new Date();
-        const diff = targetDate - now;
-        if (diff <= 0) {
-          document.getElementById('countdownResult').innerText = "Countdown finished!";
-          clearInterval(interval);
-        } else {
-          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-          const minutes = Math.floor((diff / (1000 * 60)) % 60);
-          const seconds = Math.floor((diff / 1000) % 60);
-          document.getElementById('countdownResult').innerText = ${days}d ${hours}h ${minutes}m ${seconds}s left;
-        }
-      }, 1000);
-    }
+    loadCurrencies().then(convert);
+    setInterval(convert,300000); // auto-refresh
   </script>
 </body>
 </html>
