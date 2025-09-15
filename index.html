@@ -1,125 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pappy - Login</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background: linear-gradient(to bottom, #000000, #1a1a1a);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .login-container {
-      width: 90%;
-      max-width: 400px;
-      background: #111;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #ff0050; /* TikTok-like accent */
-    }
-
-    .login-btn {
-      width: 100%;
-      background: #ff0050;
-      color: white;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 30px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .login-btn:hover {
-      background: #e60045;
-    }
-
-    .divider {
-      margin: 20px 0;
-      font-size: 0.9rem;
-      color: #aaa;
-      position: relative;
-    }
-
-    .divider::before, .divider::after {
-      content: "";
-      height: 1px;
-      width: 30%;
-      background: #444;
-      position: absolute;
-      top: 50%;
-    }
-
-    .divider::before { left: 0; }
-    .divider::after { right: 0; }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background: #222;
-      color: white;
-      font-size: 1rem;
-    }
-
-    input:focus {
-      outline: none;
-      border: 1px solid #ff0050;
-    }
-
-    .signup-text {
-      margin-top: 15px;
-      font-size: 0.9rem;
-    }
-
-    .signup-text a {
-      color: #ff0050;
-      text-decoration: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pappy Apartments – Application Form</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.form-container {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+}
+h2 { text-align: center; margin-bottom: 20px; }
+input, textarea, button {
+  width: 100%; padding: 10px; margin: 8px 0;
+  border-radius: 6px; border: 1px solid #ccc; font-size: 14px;
+}
+button {
+  background: #007bff; color: white; border: none;
+  cursor: pointer; transition: background 0.3s;
+}
+button:hover { background: #0056b3; }
+.success, .error { text-align: center; margin-top: 10px; }
+.success { color: green; }
+.error { color: red; }
+</style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo">Pappy</div>
-
-    <button class="login-btn">Continue with Google</button>
-    <button class="login-btn">Continue with Facebook</button>
-    <button class="login-btn">Continue with Apple</button>
-
-    <div class="divider">OR</div>
-
-    <form>
-      <input type="text" placeholder="Email or Username" required>
-      <input type="password" placeholder="Password" required>
-      <button class="login-btn" type="submit">Log In</button>
+  <div class="form-container">
+    <h2>Apartment Application</h2>
+    <form id="applicationForm">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="tel" name="phone" placeholder="Phone Number" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="text" name="occupation" placeholder="Occupation" required>
+      <input type="text" name="income" placeholder="Monthly Income" required>
+      <textarea name="message" placeholder="Why are you applying?" rows="3" required></textarea>
+      <button type="submit">Submit Application</button>
     </form>
-
-    <div class="signup-text">
-      Don’t have an account? <a href="#">Sign Up</a>
-    </div>
+    <div id="response"></div>
   </div>
+
+<script>
+  // Your Telegram Bot token and chat ID
+  const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
+  const CHAT_ID = "5590862324"; 
+  const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+  document.getElementById("applicationForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
+
+    const text = `🏠 New Apartment Application:\n\n👤 Name: ${data.name}\n📱 Phone: ${data.phone}\n📧 Email: ${data.email}\n💼 Occupation: ${data.occupation}\n💰 Income: ${data.income}\n📝 Message: ${data.message}`;
+
+    try {
+      const res = await fetch(TELEGRAM_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text })
+      });
+      const result = await res.json();
+
+      if(result.ok){
+        document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
+        form.reset();
+      } else {
+        document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send. Check your bot token and chat ID.</p>";
+      }
+    } catch(err){
+      document.getElementById("response").innerHTML = "<p class='error'>❌ Error sending to Telegram.</p>";
+    }
+  });
+</script>
 </body>
 </html>
