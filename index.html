@@ -1,214 +1,436 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pappy Currency</title>
-  <link rel="icon" type="image/png" href="logo.png"> <!-- favicon -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Loan & Mortgage Pro</title>
+
+  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    :root {
-      --bg: #f5f7fa;
-      --card: #ffffff;
-      --text: #222;
-      --accent: #0077ff;
+    :root{
+      --bg:#f4f6fa;
+      --card:#fff;
+      --text:#0f1720;
+      --muted:#556;
+      --accent:#0b74ff;
+      --accent-2:#10b981;
+      --danger:#ef4444;
+      --radius:12px;
     }
-    [data-theme="dark"] {
-      --bg: #181a1f;
-      --card: #22252b;
-      --text: #f5f5f5;
-      --accent: #4aa3ff;
+    [data-theme="dark"]{
+      --bg:#0b1220;
+      --card:#0f1726;
+      --text:#e6eef8;
+      --muted:#9fb0c8;
+      --accent:#5aa8ff;
+      --accent-2:#34d399;
+      --danger:#fb7185;
     }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      transition: background 0.3s, color 0.3s;
+
+    *{box-sizing:border-box;font-family:Inter,Segoe UI,system-ui,Arial,sans-serif}
+    body{margin:0;background:var(--bg);color:var(--text); -webkit-font-smoothing:antialiased; padding:28px; display:flex; align-items:flex-start; justify-content:center; min-height:100vh;}
+    .wrap{width:100%;max-width:1100px;}
+    header{display:flex;align-items:center;justify-content:space-between; margin-bottom:18px;}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(11,116,255,0.12);
     }
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    header img {
-      height: 80px;
-      margin-bottom: 10px;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-    .card {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      width: 100%;
-      max-width: 500px;
-      transition: background 0.3s;
-    }
-    .row {
-      display: flex;
-      gap: 10px;
-      margin: 10px 0;
-    }
-    input, select, button {
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      flex: 1;
-      outline: none;
-    }
-    button {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    .swap {
-      flex: 0;
-      padding: 10px 15px;
-      font-weight: bold;
-    }
-    .result {
-      margin-top: 15px;
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .updated {
-      font-size: 0.85rem;
-      opacity: 0.7;
-      margin-top: 5px;
-    }
-    .theme-toggle {
-      margin-top: 15px;
-      cursor: pointer;
-      padding: 6px 12px;
-      background: var(--accent);
-      border-radius: 8px;
-      color: #fff;
-      border: none;
-    }
-    canvas {
-      margin-top: 20px;
-      max-height: 250px;
-    }
+    h1{margin:0;font-size:1.25rem}
+    p.lead{margin:0;color:var(--muted);font-size:0.95rem}
+
+    .controls{display:grid;grid-template-columns:1fr 420px; gap:18px; align-items:start;}
+    @media (max-width:880px){ .controls{grid-template-columns:1fr; } }
+
+    .card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.06);}
+
+    /* Left panel (calculator & schedule) */
+    .calc{display:grid;gap:12px}
+    label{display:block;font-size:0.9rem;color:var(--muted);margin-bottom:6px}
+    input[type="number"], select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #e6eef8;background:transparent;color:var(--text);font-size:1rem}
+    .row{display:flex;gap:12px}
+    .row .col{flex:1}
+
+    .actions{display:flex;gap:10px;margin-top:6px}
+    button.btn{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text)}
+    .small{font-size:0.9rem;padding:8px 10px;border-radius:8px}
+
+    .summary{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .stat{flex:1;min-width:140px;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.04)}
+    .stat h3{margin:0;font-size:0.95rem;color:var(--muted)}
+    .stat p{margin:8px 0 0;font-size:1.15rem;font-weight:700}
+
+    .table-wrap{margin-top:12px;max-height:360px;overflow:auto;border-radius:10px;border:1px solid rgba(0,0,0,0.06)}
+    table{width:100%;border-collapse:collapse;font-size:0.95rem}
+    th,td{padding:10px;border-bottom:1px solid rgba(0,0,0,0.04);text-align:right}
+    th{position:sticky;top:0;background:var(--card);text-align:right;color:var(--muted);font-weight:700}
+    td:first-child, th:first-child{text-align:left;padding-left:14px}
+
+    .chart-wrap{margin-left:18px}
+    @media (max-width:880px){ .chart-wrap{margin-left:0;margin-top:18px} }
+
+    footer{margin-top:16px;color:var(--muted);font-size:0.9rem;text-align:center}
+
+    /* theme toggle */
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .toggle{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:transparent;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+    .badge{font-weight:700;padding:4px 8px;border-radius:8px;background:rgba(0,0,0,0.04);color:var(--muted)}
+    .error{color:var(--danger);font-weight:600}
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Pappy Currency Logo">
-    <h1>Pappy Currency</h1>
-    <p>Convert currencies with live rates & history</p>
-  </header>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">LM</div>
+        <div>
+          <h1>Loan & Mortgage Pro</h1>
+          <p class="lead">Fast mortgage & loan calculator · amortization schedule · export CSV</p>
+        </div>
+      </div>
 
-  <div class="card">
-    <div class="row">
-      <input type="number" id="amount" value="1" min="0" step="any">
+      <div class="top-actions">
+        <div class="badge" id="modeLabel">Light</div>
+        <button class="toggle" id="themeToggle">Toggle Theme</button>
+      </div>
+    </header>
+
+    <div class="controls">
+      <!-- LEFT: Calculator & Schedule -->
+      <div class="card">
+        <div class="calc">
+          <!-- Inputs -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:end">
+              <div>
+                <label>Loan / Mortgage Type</label>
+                <select id="loanType" style="width:220px">
+                  <option value="loan">Standard Loan</option>
+                  <option value="mortgage">Mortgage</option>
+                </select>
+              </div>
+              <div>
+                <label>Payment Frequency</label>
+                <select id="freq" style="width:160px">
+                  <option value="12">Monthly</option>
+                  <option value="26">Bi-weekly</option>
+                  <option value="52">Weekly</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label>Principal (loan amount)</label>
+              <input id="principal" type="number" placeholder="e.g. 250000" min="0" step="0.01" />
+            </div>
+            <div style="width:150px">
+              <label>Currency</label>
+              <select id="currency">
+                <option value="$">$ USD</option>
+                <option value="€">€ EUR</option>
+                <option value="£">£ GBP</option>
+                <option value="₦">₦ NGN</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label>Annual interest rate (%)</label>
+              <input id="rate" type="number" placeholder="e.g. 4.5" min="0" step="0.01" />
+            </div>
+            <div class="col">
+              <label>Term (years)</label>
+              <input id="years" type="number" placeholder="e.g. 30" min="0" step="1" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label>Extra payment per period (optional)</label>
+              <input id="extra" type="number" placeholder="e.g. 100" min="0" step="0.01" />
+            </div>
+            <div style="width:170px">
+              <label>Start date</label>
+              <input id="startDate" type="date" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="computeBtn">Compute</button>
+            <button class="ghost small" id="resetBtn">Reset</button>
+            <button class="ghost small" id="exportBtn">Export CSV</button>
+          </div>
+
+          <div id="errorMsg" style="margin-top:10px"></div>
+
+          <!-- Summary -->
+          <div class="summary" style="margin-top:12px">
+            <div class="stat">
+              <h3>Payment</h3>
+              <p id="paymentVal">—</p>
+            </div>
+            <div class="stat">
+              <h3>Total Paid</h3>
+              <p id="totalPaid">—</p>
+            </div>
+            <div class="stat">
+              <h3>Total Interest</h3>
+              <p id="totalInterest">—</p>
+            </div>
+            <div class="stat">
+              <h3>Payoff Time</h3>
+              <p id="payoffTime">—</p>
+            </div>
+          </div>
+
+          <!-- Amortization table -->
+          <div class="table-wrap" id="tableWrap" style="display:none;margin-top:12px">
+            <table id="amTable">
+              <thead>
+                <tr><th>Payment #</th><th>Payment Date</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Extra</th><th>Balance</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Chart -->
+      <div class="chart-wrap">
+        <div class="card" style="width:100%;max-width:520px">
+          <h3 style="margin-top:0;margin-bottom:8px">Balance over time</h3>
+          <canvas id="balanceChart" style="max-height:420px"></canvas>
+        </div>
+      </div>
     </div>
-    <div class="row">
-      <select id="from"></select>
-      <button class="swap">⇄</button>
-      <select id="to"></select>
-    </div>
-    <div class="row">
-      <button id="convert">Convert</button>
-    </div>
-    <div class="result" id="result">Enter amount and convert.</div>
-    <div class="updated" id="updated"></div>
-    <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
-    <canvas id="chart"></canvas>
+
+    <footer>
+      Made with ♥ — Loan & Mortgage Pro. Exported CSV is comma-separated and opens in Excel/Sheets.
+    </footer>
   </div>
 
-  <script>
-    const fromEl = document.getElementById("from");
-    const toEl = document.getElementById("to");
-    const amountEl = document.getElementById("amount");
-    const resultEl = document.getElementById("result");
-    const updatedEl = document.getElementById("updated");
-    const chartEl = document.getElementById("chart");
-    let chart;
+<script>
+(function(){
+  // Helpers
+  const $ = id => document.getElementById(id);
+  const fmt = n => (Number.isFinite(n) ? n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—');
+  const currencySym = () => $('currency').value || '$';
+  const setError = (m='') => $('errorMsg').innerHTML = m ? `<div class="error">${m}</div>` : '';
 
-    // Theme persistence
-    if(localStorage.getItem("theme")==="dark"){
-      document.body.setAttribute("data-theme","dark");
+  // Default sample values
+  $('principal').value = 250000;
+  $('rate').value = 4.5;
+  $('years').value = 30;
+  $('extra').value = 0;
+  $('startDate').value = new Date().toISOString().slice(0,10);
+
+  // theme toggle
+  const themeToggle = $('themeToggle');
+  const modeLabel = $('modeLabel');
+  const applyTheme = (t) => {
+    if(t==='dark'){ document.documentElement.setAttribute('data-theme','dark'); modeLabel.textContent='Dark'; }
+    else { document.documentElement.removeAttribute('data-theme'); modeLabel.textContent='Light'; }
+    localStorage.setItem('lm_theme', t);
+  };
+  const saved = localStorage.getItem('lm_theme') || 'light';
+  applyTheme(saved);
+  themeToggle.addEventListener('click', ()=> applyTheme((localStorage.getItem('lm_theme')==='dark') ? 'light' : 'dark'));
+
+  // Chart setup
+  const ctx = document.getElementById('balanceChart').getContext('2d');
+  let chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#0b74ff', fill:false, tension:0.2 }] },
+    options: { responsive:true, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{ display:false } } }
+  });
+
+  // Compute functions
+  function calculateSchedule({principal, annualRate, years, freq, extra, startDate}) {
+    // Validate
+    if(!(principal>0)) throw new Error('Principal must be greater than 0');
+    if(!(annualRate>=0)) throw new Error('Interest rate is required');
+    if(!(years>0)) throw new Error('Term (years) must be > 0');
+    if(!(freq>0)) throw new Error('Invalid payment frequency');
+
+    const periods = Math.round(years * freq);
+    const periodRate = (annualRate/100) / freq;
+    // Standard annuity payment formula
+    let payment;
+    if(periodRate === 0){
+      payment = principal / periods;
+    } else {
+      payment = principal * (periodRate / (1 - Math.pow(1 + periodRate, -periods)));
     }
-    document.getElementById("themeToggle").onclick=()=>{
-      const isDark=document.body.getAttribute("data-theme")==="dark";
-      if(isDark){
-        document.body.removeAttribute("data-theme");
-        localStorage.setItem("theme","light");
-      }else{
-        document.body.setAttribute("data-theme","dark");
-        localStorage.setItem("theme","dark");
+    payment = Number(payment);
+
+    // Build schedule
+    let balance = principal;
+    let schedule = [];
+    let paymentDate = new Date(startDate);
+    const addDays = (freq === 12) ? (30) : (freq === 26 ? 14 : 7); // approx for label
+    let totalPaid = 0, totalInterest = 0;
+
+    for(let i=1; i<=10000; i++){
+      if(balance <= 0.0001) break;
+      // interest for this period
+      const interest = balance * periodRate;
+      let principalPaid = payment - interest;
+      let extraPaid = Number(extra) || 0;
+
+      // handle last payment if payment exceeds balance
+      if(principalPaid + extraPaid > balance){
+        principalPaid = balance;
+        extraPaid = 0;
+        // adjust payment to interest + principalPaid
+        const finalPayment = interest + principalPaid;
+        totalPaid += finalPayment;
+        totalInterest += interest;
+        balance = 0;
+        schedule.push({
+          n: i,
+          date: new Date(paymentDate),
+          payment: finalPayment,
+          principal: principalPaid,
+          interest,
+          extra: 0,
+          balance: 0
+        });
+        break;
+      } else {
+        balance = balance - principalPaid - extraPaid;
+        totalPaid += (payment + extraPaid);
+        totalInterest += interest;
+        schedule.push({
+          n: i,
+          date: new Date(paymentDate),
+          payment: payment,
+          principal: principalPaid,
+          interest,
+          extra: extraPaid,
+          balance: Math.max(0, balance)
+        });
       }
-    };
 
-    async function loadCurrencies() {
-      const res = await fetch("https://api.exchangerate.host/symbols");
-      const data = await res.json();
-      Object.keys(data.symbols).forEach(code=>{
-        let opt1=document.createElement("option");
-        let opt2=document.createElement("option");
-        opt1.value=opt2.value=code;
-        opt1.textContent=opt2.textContent=`${code} - ${data.symbols[code].description}`;
-        fromEl.appendChild(opt1);
-        toEl.appendChild(opt2);
-      });
-      fromEl.value="USD";
-      toEl.value="EUR";
-    }
-
-    async function convert() {
-      const amount = parseFloat(amountEl.value);
-      if(isNaN(amount)||amount<=0){resultEl.textContent="Enter a valid amount";return;}
-      const from = fromEl.value, to = toEl.value;
-      try {
-        const res = await fetch(`https://api.exchangerate.host/latest?base=${from}&symbols=${to}`);
-        const data = await res.json();
-        const rate = data.rates[to];
-        const converted = (amount*rate).toFixed(2);
-        resultEl.textContent=`${amount} ${from} = ${converted} ${to}`;
-        updatedEl.textContent=`Last updated: ${new Date(data.date).toDateString()}`;
-        drawChart(from,to);
-      }catch(e){
-        resultEl.textContent="Conversion failed.";
+      // next payment date (advance)
+      paymentDate.setDate(paymentDate.getDate() + addDays);
+      // safety: if schedule grows too big, break
+      if(schedule.length > periods + 5) {
+        // prevents infinite loop on bad input
+        if(schedule.length > 10000) break;
       }
     }
 
-    async function drawChart(from,to){
-      const end = new Date().toISOString().split("T")[0];
-      const start = new Date(Date.now()-6*24*60*60*1000).toISOString().split("T")[0];
-      const res = await fetch(`https://api.exchangerate.host/timeseries?base=${from}&symbols=${to}&start_date=${start}&end_date=${end}`);
-      const data = await res.json();
-      const labels = Object.keys(data.rates).sort();
-      const values = labels.map(d=>data.rates[d][to]);
-      if(chart) chart.destroy();
-      chart=new Chart(chartEl,{
-        type:"line",
-        data:{labels, datasets:[{label:`${from} → ${to}`, data:values, borderColor:"#0077ff", fill:false}]},
-        options:{responsive:true, plugins:{legend:{display:false}}}
-      });
-    }
-
-    document.getElementById("convert").onclick=convert;
-    document.querySelector(".swap").onclick=()=>{
-      [fromEl.value,toEl.value]=[toEl.value,fromEl.value];
-      convert();
+    return {
+      payment,
+      schedule,
+      totalPaid,
+      totalInterest
     };
+  }
 
-    loadCurrencies().then(convert);
-    setInterval(convert,300000); // auto-refresh
-  </script>
+  // Render schedule table
+  function renderSchedule(schedule){
+    const tbody = document.querySelector('#amTable tbody');
+    tbody.innerHTML = '';
+    schedule.forEach(row=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${row.n}</td>
+                      <td>${row.date.toISOString().slice(0,10)}</td>
+                      <td>${currencySym()} ${fmt(row.payment)}</td>
+                      <td>${currencySym()} ${fmt(row.principal)}</td>
+                      <td>${currencySym()} ${fmt(row.interest)}</td>
+                      <td>${currencySym()} ${fmt(row.extra)}</td>
+                      <td>${currencySym()} ${fmt(row.balance)}</td>`;
+      tbody.appendChild(tr);
+    });
+    $('tableWrap').style.display = schedule.length ? 'block' : 'none';
+  }
+
+  // Update chart
+  function updateChart(schedule){
+    const labels = schedule.map(r => r.date.toISOString().slice(0,10));
+    const data = schedule.map(r => Number(r.balance.toFixed(2)));
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();
+  }
+
+  // derive payoff time
+  function payoffString(schedule, freq){
+    if(!schedule.length) return '—';
+    const last = schedule[schedule.length-1];
+    const d = last.date;
+    const years = Math.floor((d - new Date())/(365*24*60*60*1000));
+    return `${schedule.length} payments · last: ${d.toISOString().slice(0,10)}`;
+  }
+
+  // Compute handler
+  $('computeBtn').addEventListener('click', ()=>{
+    setError('');
+    try{
+      const principal = Number($('principal').value);
+      const rate = Number($('rate').value);
+      const years = Number($('years').value);
+      const freq = Number($('freq').value);
+      const extra = Number($('extra').value) || 0;
+      const startDate = $('startDate').value || new Date().toISOString().slice(0,10);
+
+      const res = calculateSchedule({principal, annualRate:rate, years, freq, extra, startDate});
+      $('paymentVal').textContent = `${currencySym()} ${fmt(res.payment)}`;
+      $('totalPaid').textContent = `${currencySym()} ${fmt(res.totalPaid)}`;
+      $('totalInterest').textContent = `${currencySym()} ${fmt(res.totalInterest)}`;
+      $('payoffTime').textContent = payoffString(res.schedule, freq);
+
+      renderSchedule(res.schedule);
+      updateChart(res.schedule);
+    }catch(err){
+      setError(err.message || 'Invalid input');
+    }
+  });
+
+  // Reset handler
+  $('resetBtn').addEventListener('click', ()=>{
+    $('principal').value = '';
+    $('rate').value = '';
+    $('years').value = '';
+    $('extra').value = '';
+    setError('');
+    $('tableWrap').style.display = 'none';
+    $('paymentVal').textContent = '—';
+    $('totalPaid').textContent = '—';
+    $('totalInterest').textContent = '—';
+    $('payoffTime').textContent = '—';
+    chart.data.labels = []; chart.data.datasets[0].data = []; chart.update();
+  });
+
+  // Export CSV
+  $('exportBtn').addEventListener('click', ()=>{
+    const tbody = document.querySelectorAll('#amTable tbody tr');
+    if(!tbody.length){ setError('No schedule to export. Compute first.'); return; }
+    const rows = [];
+    rows.push(['Payment #','Date','Payment','Principal','Interest','Extra','Balance']);
+    tbody.forEach(tr=>{
+      const cols = Array.from(tr.querySelectorAll('td')).map(td=>td.textContent.replace(/,/g,''));
+      rows.push(cols);
+    });
+    const csv = rows.map(r => r.map(v => `"${v.replace(/"/g,'""')}"`).join(',')).join('\\n');
+    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'amortization_schedule.csv'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
+  });
+
+  // quick compute on load (sample)
+  document.addEventListener('DOMContentLoaded', ()=> $('computeBtn').click());
+
+})();
+</script>
 </body>
 </html>
