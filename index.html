@@ -3,222 +3,261 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pappy Apartments – Application Form</title>
-
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
+<title>PRIMEKEY RENTALS APPLICATION FORM</title>
 <style>
 body {
-  font-family: 'Roboto', sans-serif;
-  background: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-  background-size: cover;
+  font-family: Arial, sans-serif;
+  background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c') no-repeat center center/cover;
+  min-height: 100vh;
   margin: 0;
-  padding: 0;
   display: flex;
   justify-content: center;
-  padding: 40px 20px;
+  align-items: flex-start;
+  padding: 40px 10px;
 }
 .form-container {
-  background: rgba(255,255,255,0.98);
-  padding: 30px 35px;
-  border-radius: 15px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-  max-width: 850px;
+  background: rgba(255,255,255,0.95);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  max-width: 800px;
   width: 100%;
-  animation: fadeIn 1s ease-in-out;
 }
-h2 { text-align: center; margin-bottom: 30px; color: #222; }
-h3 {
-  margin-top: 25px;
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
   color: #007bff;
-  border-bottom: 2px solid #007bff;
+}
+h3 {
+  margin-top: 20px;
+  color: #333;
+  border-bottom: 2px solid #eee;
   padding-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
-h3 i { color: #007bff; }
 input, textarea, select, button {
-  width: 100%; padding: 12px; margin: 8px 0;
-  border-radius: 8px; border: 1px solid #ccc; font-size: 15px;
-  box-sizing: border-box; transition: all 0.3s ease;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
-input:focus, textarea:focus, select:focus {
-  border-color: #007bff; outline: none;
-  box-shadow: 0 0 10px rgba(0,123,255,0.2);
-  transform: translateY(-1px);
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
 }
-button.submit-btn {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white; border: none; cursor: pointer;
-  font-size: 16px; padding: 14px; margin-top: 20px; border-radius: 10px;
-  transition: all 0.3s;
-}
-button.submit-btn:hover {
-  background: linear-gradient(135deg, #218838, #1ca485);
-  transform: translateY(-2px);
-}
-label { font-weight: 500; margin-top: 10px; display: block; }
-.success, .error { text-align: center; margin-top: 15px; font-weight: bold; }
+button:hover { background: #0056b3; }
+.success, .error { text-align: center; margin-top: 10px; font-weight: bold; }
 .success { color: green; }
 .error { color: red; }
-@keyframes fadeIn { 0% { opacity: 0; transform: translateY(15px);} 100% { opacity: 1; transform: translateY(0);} }
 </style>
 </head>
 <body>
+  <div class="form-container">
+    <h2>Apartment Application</h2>
+    <form id="applicationForm">
+      <!-- Applicant Type -->
+      <h3>Personal Information</h3>
+      <label>Type of Applicant:</label>
+      <select name="applicant_type" required>
+        <option value="">Select...</option>
+        <option value="Tenant">Tenant</option>
+        <option value="Guarantor">Guarantor</option>
+      </select>
 
-<div class="form-container">
-  <h2><i class="fas fa-building"></i> Pappy Apartments Application Form</h2>
-  <form id="applicationForm">
+      <label>If Guarantor, name of tenant & relation:</label>
+      <input type="text" name="guarantor_relation" placeholder="John Doe - Brother">
 
-    <!-- Number of Applicants -->
-    <label>Number of Applicants:</label>
-    <select id="num_applicants" name="num_applicants" required>
-      <option value="1" selected>1 Applicant</option>
-      <option value="2">2 Applicants</option>
-      <option value="3">3 Applicants</option>
-    </select>
+      <label>Full Name:</label>
+      <input type="text" name="name" placeholder="Full Name" required>
 
-    <!-- Applicant 1 -->
-    <h3><i class="fas fa-user"></i> Applicant 1 - Personal Information</h3>
-    <label>Full Name:</label>
-    <input type="text" name="applicant1_full_name" placeholder="Jane Smith" required>
-    <label>Date of Birth:</label>
-    <input type="date" name="applicant1_dob" required>
-    <label>Mobile Phone:</label>
-    <input type="tel" name="applicant1_mobile_phone" placeholder="+1 234 567 8900" required>
-    <label>Email Address:</label>
-    <input type="email" name="applicant1_email" placeholder="you@example.com" required>
+      <label>Date of Birth:</label>
+      <input type="date" name="dob" required>
 
-    <!-- Additional Applicants -->
-    <div id="additional_applicants"></div>
+      <label>Phone Number:</label>
+      <input type="tel" name="phone" placeholder="+1 234 567 8900" required>
 
-    <!-- Current Address -->
-    <h3><i class="fas fa-home"></i> Current Address</h3>
-    <label>Street Address:</label>
-    <input type="text" name="current_street" placeholder="123 Main St" required>
-    <label>Apt #:</label>
-    <input type="text" name="current_apt" placeholder="101">
-    <label>City:</label>
-    <input type="text" name="current_city" placeholder="City" required>
-    <label>State:</label>
-    <select name="current_state" required>
-      <option value="">Select State</option>
-      <option value="NY">New York</option>
-      <option value="CA">California</option>
-      <option value="TX">Texas</option>
-      <!-- (all other US states here) -->
-    </select>
-    <label>Zip Code:</label>
-    <input type="text" name="current_zip" placeholder="12345" required>
-    <label>Reason for Leaving:</label>
-    <textarea name="reason_leaving" rows="2" placeholder="Why are you leaving this address?" required></textarea>
+      <label>Email Address (for rent payments):</label>
+      <input type="email" name="email" placeholder="example@email.com" required>
 
-    <!-- Current Employment -->
-    <h3><i class="fas fa-briefcase"></i> Current Employment</h3>
-    <label>Employer:</label>
-    <input type="text" name="current_employer" placeholder="Company Name" required>
-    <label>Occupation/Position:</label>
-    <input type="text" name="current_position" placeholder="Software Engineer" required>
-    <label>Income:</label>
-    <input type="number" name="current_income" placeholder="$5000" min="0" required>
-    <label>Pay Frequency:</label>
-    <select name="income_frequency" required>
-      <option value="">Select...</option>
-      <option value="weekly">Weekly</option>
-      <option value="bi-weekly">Every 2 Weeks</option>
-      <option value="monthly">Monthly</option>
-    </select>
+      <!-- Rental History -->
+      <h3>Rental History</h3>
+      <label>Current Address:</label>
+      <input type="text" name="current_address" placeholder="123 Main St" required>
 
-    <!-- Move-in Date -->
-    <h3><i class="fas fa-calendar-check"></i> Move-In Date</h3>
-    <label>When are you ready to move in?</label>
-    <input type="date" name="move_in_date" required>
+      <label>Apt #:</label>
+      <input type="text" name="apt_number" placeholder="Optional">
 
-    <!-- Authorization -->
-    <h3><i class="fas fa-file-signature"></i> Authorization & Fee</h3>
-    <p>
-    I hereby authorize the Landlord or Rental Agent to obtain information it deems desirable, including credit reports, civil or criminal actions, rental history, employment/income details, and any other relevant information. This application releases the Landlord, its employees and agents, from all liabilities incurred in furnishing and obtaining such information.
-    </p>
-    <label>
-      <input type="checkbox" name="authorization" required> I agree to the above authorization.
-    </label>
-    <p>*Credit check fee: $50.00 per applicant</p>
+      <label>City:</label>
+      <input type="text" name="city" placeholder="City" required>
 
-    <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Application</button>
-  </form>
-  <div id="response"></div>
-</div>
+      <label>State:</label>
+      <select name="state" required>
+        <option value="">Select State...</option>
+        <option value="NY">New York</option>
+        <option value="CA">California</option>
+        <option value="TX">Texas</option>
+        <option value="FL">Florida</option>
+        <option value="IL">Illinois</option>
+        <!-- Add all 50 states as needed -->
+      </select>
+
+      <label>Zip Code:</label>
+      <input type="text" name="zip" placeholder="12345" required>
+
+      <label>Landlord / Mgmt. Co.:</label>
+      <input type="text" name="landlord" placeholder="Landlord/Mgmt Co." required>
+
+      <label>Landlord Phone:</label>
+      <input type="tel" name="landlord_phone" placeholder="+1 987 654 3210" required>
+
+      <label>Monthly Rent:</label>
+      <input type="number" name="rent" placeholder="1200" min="0" required>
+
+      <label>Reason for Moving:</label>
+      <textarea name="reason_moving" rows="2" placeholder="Explain why you are moving" required></textarea>
+
+      <!-- Employment -->
+      <h3>Current Employment</h3>
+      <label>Employer:</label>
+      <input type="text" name="current_employer" placeholder="Company Name" required>
+
+      <label>Occupation/Position:</label>
+      <input type="text" name="current_position" placeholder="Software Engineer" required>
+
+      <label>Income:</label>
+      <input type="number" name="current_income" placeholder="$5000" min="0" required>
+
+      <label>Pay Frequency:</label>
+      <select name="income_frequency" required>
+        <option value="">Select...</option>
+        <option value="weekly">Weekly</option>
+        <option value="bi-weekly">Every 2 Weeks</option>
+      </select>
+
+      <!-- Additional Info -->
+      <h3>Additional Information</h3>
+      <label>Are you married?</label>
+      <select name="married" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <label>Do you have kids?</label>
+      <select name="kids" id="kids" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+      <div id="kids_number_div" style="display:none;">
+        <label>How many kids?</label>
+        <input type="number" name="kids_number" min="1" placeholder="Enter number of kids">
+      </div>
+
+      <label>Do you have a car?</label>
+      <select name="car" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <label>Do you have a pet?</label>
+      <select name="pet" id="pet" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+      <div id="pet_type_div" style="display:none;">
+        <label>What type of pet?</label>
+        <input type="text" name="pet_type" placeholder="e.g., Dog, Cat, Bird">
+      </div>
+
+      <label>How long of a lease are you looking for?</label>
+      <select name="lease_length" required>
+        <option value="">Select...</option>
+        <option value="6 months">6 Months</option>
+        <option value="12 months">12 Months</option>
+        <option value="18 months">18 Months</option>
+        <option value="24 months">24 Months</option>
+      </select>
+
+      <label>Are you ready to secure the apartment with a security deposit?</label>
+      <select name="security_deposit" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <!-- Move-in Date -->
+      <h3>Move-In Date</h3>
+      <label>When are you ready to move in?</label>
+      <input type="date" name="move_in_date" required>
+
+      <!-- Authorization -->
+      <h3>Authorization & Fee</h3>
+      <p>
+        I hereby authorize the Landlord or Rental Agent to obtain information it deems desirable, including credit reports, civil or criminal actions, rental history, employment/salary details, and any other relevant information. This application releases the Landlord, its employees and agents, from all liabilities incurred in furnishing and obtaining such information.
+      </p>
+      <label>
+        <input type="checkbox" name="authorization" required> I agree to the above authorization.
+      </label>
+      <p>*Credit check fee: $50.00 per applicant</p>
+
+      <button type="submit">Submit Application</button>
+    </form>
+    <div id="response"></div>
+  </div>
 
 <script>
-// Dynamic additional applicants
-const numApplicants = document.getElementById('num_applicants');
-const additionalDiv = document.getElementById('additional_applicants');
+  // Telegram Bot config
+  const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
+  const CHAT_ID = "5590862324"; 
+  const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
-numApplicants.addEventListener('change', () => {
-  additionalDiv.innerHTML = '';
-  const count = parseInt(numApplicants.value);
-  for(let i=2; i<=count; i++){
-    const section = document.createElement('div');
-    section.innerHTML = `
-      <h3><i class="fas fa-user"></i> Applicant ${i} - Personal Information</h3>
-      <label>Full Name:</label>
-      <input type="text" name="applicant${i}_full_name" placeholder="Full Name" required>
-      <label>Date of Birth:</label>
-      <input type="date" name="applicant${i}_dob" required>
-      <label>Mobile Phone:</label>
-      <input type="tel" name="applicant${i}_mobile_phone" placeholder="+1 234 567 890${i}" required>
-      <label>Email Address:</label>
-      <input type="email" name="applicant${i}_email" placeholder="you${i}@example.com" required>
-    `;
-    additionalDiv.appendChild(section);
-  }
-});
+  // Kids conditional
+  document.getElementById("kids").addEventListener("change", function() {
+    const kidsNumberDiv = document.getElementById("kids_number_div");
+    kidsNumberDiv.style.display = this.value === "yes" ? "block" : "none";
+  });
 
-// Telegram Submission
-const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
-const CHAT_ID = "5590862324"; 
-const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  // Pet conditional
+  document.getElementById("pet").addEventListener("change", function() {
+    const petTypeDiv = document.getElementById("pet_type_div");
+    petTypeDiv.style.display = this.value === "yes" ? "block" : "none";
+  });
 
-document.getElementById("applicationForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const submitButton = form.querySelector("button.submit-btn");
-  submitButton.disabled = true;
-  submitButton.textContent = "Sending...";
+  // Form submit
+  document.getElementById("applicationForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
 
-  const data = Object.fromEntries(new FormData(form));
-  let text = "🏠 New Apartment Application:\n\n";
-  for(const key in data){
-    text += `*${key.replace(/_/g," ")}*: ${data[key]}\n`;
-  }
-
-  try {
-    const res = await fetch(TELEGRAM_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: CHAT_ID, text })
-    });
-    const result = await res.json();
-    if(result.ok){
-      document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
-      form.reset();
-      additionalDiv.innerHTML = '';
-    } else {
-      document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send. Check your bot token and chat ID.</p>";
+    let text = "🏠 New Apartment Application:\n\n";
+    for (const key in data) {
+      text += `${key}: ${data[key]}\n`;
     }
-  } catch(err){
-    document.getElementById("response").innerHTML = "<p class='error'>❌ Error sending to Telegram.</p>";
-    console.error(err);
-  } finally {
-    submitButton.disabled = false;
-    submitButton.innerHTML = "<i class='fas fa-paper-plane'></i> Submit Application";
-  }
-});
+
+    try {
+      const res = await fetch(TELEGRAM_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text })
+      });
+      const result = await res.json();
+      if(result.ok){
+        document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
+        form.reset();
+      } else {
+        document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send.</p>";
+      }
+    } catch(err){
+      document.getElementById("response").innerHTML = "<p class='error'>❌ Error submitting form.</p>";
+    }
+  });
 </script>
 </body>
 </html>
