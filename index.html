@@ -1,237 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pappy Apartments – Application Form</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1740&q=80') no-repeat center center fixed;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  margin: 0;
-  padding: 30px;
-}
-.form-container {
-  background: rgba(255, 255, 255, 0.97);
-  padding: 25px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  max-width: 700px;
-  width: 100%;
-}
-h2 { text-align: center; margin-bottom: 20px; }
-ol { padding-left: 20px; }
-li { margin-bottom: 15px; }
-input, textarea, select, button {
-  width: 100%; padding: 10px; margin-top: 6px;
-  border-radius: 6px; border: 1px solid #ccc; font-size: 14px;
-}
-button {
-  background: #007bff; color: white; border: none;
-  cursor: pointer; transition: background 0.3s;
-  margin-top: 10px;
-}
-button:hover { background: #0056b3; }
-.success, .error { text-align: center; margin-top: 10px; }
-.success { color: green; }
-.error { color: red; }
-.hidden { display: none; }
-.inline { display: inline-block; margin-left: 10px; }
-label { font-weight: bold; display: block; }
-</style>
+  <meta charset="UTF-8">
+  <title>Apartment Application Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1560184897-ae75f4184934?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #2c3e50;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #1a242f;
+    }
+    .hidden {
+      display: none;
+    }
+    .success {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Apartment Application</h2>
-    <form id="applicationForm">
-      <ol>
-        <!-- PERSONAL INFO -->
-        <li>
-          <label>Type of Applicant</label>
-          <select name="applicant_type" required>
-            <option value="">Select...</option>
-            <option value="Tenant">Tenant</option>
-            <option value="Guarantor">Guarantor</option>
-          </select>
-        </li>
-        <li><input type="text" name="guarantor_relation" placeholder="If guarantor, relation to tenant"></li>
-        <li><input type="text" name="name" placeholder="Full Name" required></li>
-        <li><input type="date" name="dob" required></li>
-        <li>
-          <label>Mobile Phone</label>
-          <input type="tel" id="mobile" name="mobile" placeholder="123-456-7890" maxlength="12" required>
-        </li>
-        <li><input type="email" name="email" placeholder="Email Address" required></li>
-        <li>
-          <label>Last 4 of SSN</label>
-          <input type="text" name="ssn" maxlength="4" pattern="[0-9]{4}" required>
-        </li>
+  <div class="container">
+    <h2>Apartment Application Form</h2>
+    <form id="rentalForm">
+      
+      <!-- Personal Info -->
+      <label>Full Name:</label>
+      <input type="text" name="fullname" required>
 
-        <!-- RENTAL HISTORY -->
-        <h3>Rental History</h3>
-        <li><input type="text" name="current_address" placeholder="Current Address" required></li>
-        <li><input type="text" name="apt_number" placeholder="Apt #"></li>
-        <li><input type="text" name="city" placeholder="City" required></li>
-        <li>
-          <select name="state" required>
-            <option value="">Select State...</option>
-            <option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option>
-            <option>CO</option><option>CT</option><option>DE</option><option>FL</option><option>GA</option>
-            <option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option>
-            <option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option>
-            <option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option>
-            <option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option>
-            <option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option>
-            <option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option>
-            <option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option>
-            <option>VA</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option>
-          </select>
-        </li>
-        <li><input type="text" name="zip" placeholder="Zip" required></li>
-        <li><input type="number" name="rent" placeholder="Monthly Rent ($)" required></li>
-        <li><textarea name="reason_moving" placeholder="Reason for Moving" rows="2"></textarea></li>
+      <label>Date of Birth:</label>
+      <input type="date" name="dob" required>
 
-        <!-- EMPLOYMENT -->
-        <h3>Employment</h3>
-        <li><input type="text" name="employer" placeholder="Current Employer" required></li>
-        <li><input type="text" name="occupation" placeholder="Occupation / Title" required></li>
-        <li>
-          <select name="pay_frequency" required>
-            <option value="">Pay Frequency...</option>
-            <option>Weekly</option>
-            <option>Bi-Weekly</option>
-            <option>Monthly</option>
-          </select>
-        </li>
-        <li><input type="text" name="income" placeholder="Income ($)" required></li>
+      <label>Email Address:</label>
+      <input type="email" name="email" required>
 
-        <!-- EXTRA QUESTIONS -->
-        <h3>Additional Information</h3>
-        <li>
-          <label>Are you married?</label>
-          <select name="married" required>
-            <option value="">Select...</option>
-            <option>Yes</option><option>No</option>
-          </select>
-        </li>
-        <li>
-          <label>Do you have kids?</label>
-          <select name="kids" id="kids" required>
-            <option value="">Select...</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-          <span id="kidsCountBlock" class="hidden inline">
-            <label style="margin-right:5px;">How many?</label>
-            <input type="number" name="kids_count" min="1" style="width:80px;">
-          </span>
-        </li>
-        <li>
-          <label>Do you have a car?</label>
-          <select name="car" required>
-            <option value="">Select...</option>
-            <option>Yes</option><option>No</option>
-          </select>
-        </li>
-        <li>
-          <label>Do you have pets?</label>
-          <select name="pet" required>
-            <option value="">Select...</option>
-            <option>Yes</option><option>No</option>
-          </select>
-        </li>
-        <li><input type="text" name="lease_term" placeholder="Lease Term (e.g. 12 Months)" required></li>
-        <li>
-          <label>Are you ready to secure with deposit?</label>
-          <select name="deposit" required>
-            <option value="">Select...</option>
-            <option>Yes</option><option>No</option>
-          </select>
-        </li>
-        <li>
-          <label>When are you ready to move in?</label>
-          <input type="date" name="move_in_date" required>
-        </li>
+      <label>Phone Number:</label>
+      <input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required>
 
-        <!-- AUTHORIZATION -->
-        <h3>Authorization</h3>
-        <p>
-          I hereby authorize the Landlord or Rental Agent to obtain information it deems desirable in the processing of my application,
-          including credit reports, civil or criminal actions, rental history, employment/salary details, and any other relevant information.
-          This application releases the Landlord, its employees and agents, from all liabilities and damage whatsoever incurred in furnishing
-          and obtaining such information.
-          *Credit check fee: $50.00 per applicant
-        </p>
-        <li>
-          <label><input type="checkbox" name="authorization" required> I Agree</label>
-        </li>
-      </ol>
+      <label>SSN (Last 4 digits):</label>
+      <input type="text" name="ssn" maxlength="4" pattern="[0-9]{4}" required>
+
+      <!-- Current Address -->
+      <label>Current Address:</label>
+      <input type="text" name="street" placeholder="Street Address" required>
+      <input type="text" name="apt" placeholder="Apt, Suite, etc.">
+      <input type="text" name="city" placeholder="City" required>
+      <select name="state" required>
+        <option value="">Select State</option>
+        <option>Alabama</option><option>Alaska</option><option>Arizona</option>
+        <option>Arkansas</option><option>California</option><option>Colorado</option>
+        <option>Connecticut</option><option>Delaware</option><option>Florida</option>
+        <option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+        <option>Illinois</option><option>Indiana</option><option>Iowa</option>
+        <option>Kansas</option><option>Kentucky</option><option>Louisiana</option>
+        <option>Maine</option><option>Maryland</option><option>Massachusetts</option>
+        <option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+        <option>Missouri</option><option>Montana</option><option>Nebraska</option>
+        <option>Nevada</option><option>New Hampshire</option><option>New Jersey</option>
+        <option>New Mexico</option><option>New York</option><option>North Carolina</option>
+        <option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+        <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+        <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option>
+        <option>Texas</option><option>Utah</option><option>Vermont</option>
+        <option>Virginia</option><option>Washington</option><option>West Virginia</option>
+        <option>Wisconsin</option><option>Wyoming</option>
+      </select>
+      <input type="text" name="zip" placeholder="ZIP Code" required>
+
+      <label>Why are you leaving this address?</label>
+      <textarea name="reason_leaving"></textarea>
+
+      <!-- Rental Info -->
+      <label>When are you ready to move in?</label>
+      <input type="date" name="move_in_date" required>
+
+      <label>Number of Applicants:</label>
+      <select name="num_applicants" required>
+        <option value="">Select</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+
+      <label>Are you married?</label>
+      <select name="married" required>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+
+      <label>Do you have kids?</label>
+      <select name="kids" id="kidsSelect" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+      <input type="number" name="num_kids" id="numKids" class="hidden" placeholder="How many kids?">
+
+      <label>Do you have a car?</label>
+      <select name="car" required>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+
+      <label>Do you have a pet?</label>
+      <select name="pet" id="petSelect" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+      <input type="text" name="pet_type" id="petType" class="hidden" placeholder="Type of pet">
+
+      <label>How long lease are you looking for?</label>
+      <input type="text" name="lease_length" placeholder="e.g. 12 months or 1 year" required>
+
+      <label>Are you ready to secure the apartment with security deposit?</label>
+      <select name="deposit" required>
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+
+      <!-- Employment Info -->
+      <h3>Employment Information</h3>
+      <label>Employer Name:</label>
+      <input type="text" name="employer" required>
+
+      <label>Occupation/Title:</label>
+      <input type="text" name="occupation" required>
+
+      <label>Monthly Income:</label>
+      <input type="number" name="income" required>
+
+      <label>Pay Frequency:</label>
+      <select name="pay_frequency" required>
+        <option value="">Select</option>
+        <option>Weekly</option>
+        <option>Bi-weekly</option>
+        <option>Monthly</option>
+      </select>
+
+      <!-- Authorization -->
+      <label>
+        I authorize verification of the information provided in this application.
+      </label>
+      <input type="checkbox" name="authorization" required> I Agree
 
       <button type="submit">Submit Application</button>
     </form>
-    <div id="response"></div>
+    <p class="success hidden" id="successMessage">✅ Application submitted successfully!</p>
   </div>
 
-<script>
-  // Telegram Bot setup
-  const BOT_TOKEN = "8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc";
-  const CHAT_ID = "5590862324"; 
-  const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  <script>
+    // Kids question toggle
+    document.getElementById("kidsSelect").addEventListener("change", function() {
+      document.getElementById("numKids").classList.toggle("hidden", this.value !== "Yes");
+    });
 
-  // Kids conditional display
-  const kidsSelect = document.getElementById('kids');
-  const kidsCountBlock = document.getElementById('kidsCountBlock');
-  kidsSelect.addEventListener('change', () => {
-    if(kidsSelect.value === 'Yes'){
-      kidsCountBlock.classList.remove('hidden');
-    } else {
-      kidsCountBlock.classList.add('hidden');
-    }
-  });
+    // Pet question toggle
+    document.getElementById("petSelect").addEventListener("change", function() {
+      document.getElementById("petType").classList.toggle("hidden", this.value !== "Yes");
+    });
 
-  // Auto-format phone input
-  const mobileInput = document.getElementById('mobile');
-  mobileInput.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '');
-    if(val.length > 3 && val.length <= 6){
-      val = val.slice(0,3) + '-' + val.slice(3);
-    } else if(val.length > 6){
-      val = val.slice(0,3) + '-' + val.slice(3,6) + '-' + val.slice(6,10);
-    }
-    e.target.value = val;
-  });
+    // Telegram bot integration
+    document.getElementById("rentalForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      let message = "🏡 *New Apartment Application Submitted*\n\n";
+      formData.forEach((value, key) => {
+        message += `*${key}*: ${value}\n`;
+      });
 
-  // Submit
-  document.getElementById("applicationForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const data = Object.fromEntries(new FormData(form));
-
-    const text = `🏠 Apartment Application\n\n👤 Name: ${data.name}\n📅 DOB: ${data.dob}\n📱 Mobile: ${data.mobile}\n📧 Email: ${data.email}\n🔑 Applicant Type: ${data.applicant_type}\n👥 Relation: ${data.guarantor_relation || "N/A"}\n🔢 SSN (Last 4): ${data.ssn}\n\n📍 Address: ${data.current_address}, Apt ${data.apt_number || "-"}, ${data.city}, ${data.state} ${data.zip}\n💵 Rent: $${data.rent}\n📦 Reason: ${data.reason_moving}\n\n💼 Employer: ${data.employer}\n👔 Occupation: ${data.occupation}\n💰 Income: $${data.income} (${data.pay_frequency})\n\n💍 Married: ${data.married}\n👶 Kids: ${data.kids}${data.kids === "Yes" ? " (" + data.kids_count + ")" : ""}\n🚗 Car: ${data.car}\n🐾 Pet: ${data.pet}\n📆 Lease Term: ${data.lease_term}\n💵 Deposit Ready: ${data.deposit}\n🚚 Move-in Date: ${data.move_in_date}`;
-
-    try {
-      const res = await fetch(TELEGRAM_API, {
+      fetch(`https://api.telegram.org/bot8428652927:AAEUirmhHly-u0E_HYDNdOzWp0m3MsXR_Oc/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text })
-      });
-      const result = await res.json();
-
-      if(result.ok){
-        document.getElementById("response").innerHTML = "<p class='success'>✅ Application sent successfully!</p>";
-        form.reset();
-      } else {
-        document.getElementById("response").innerHTML = "<p class='error'>❌ Failed to send. Check bot token & chat ID.</p>";
-      }
-    } catch(err){
-      document.getElementById("response").innerHTML = "<p class='error'>❌ Error sending to Telegram.</p>";
-    }
-  });
-</script>
+        body: JSON.stringify({
+          chat_id: "5590862324",
+          text: message,
+          parse_mode: "Markdown"
+        })
+      })
+      .then(() => {
+        document.getElementById("successMessage").classList.remove("hidden");
+        document.getElementById("rentalForm").reset();
+        document.getElementById("numKids").classList.add("hidden");
+        document.getElementById("petType").classList.add("hidden");
+      })
+      .catch(err => alert("Error submitting form: " + err));
+    });
+  </script>
 </body>
 </html>
